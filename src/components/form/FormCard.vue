@@ -212,6 +212,8 @@ const showTHstatus = (status) => {
     return "คณบดี";
   } else if (status == "waitingApproval") {
     return "รออนุมัติ";
+  } else if (status == "attendMeeting") {
+    return "เข้าที่ประชุม"
   } else if (status == "return") {
     return "ถูกตีกลับ";
   }

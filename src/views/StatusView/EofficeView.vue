@@ -124,7 +124,7 @@ const pulldata = async () => {
     const now = new Date();
     let fiscalYear = now.getFullYear() + 543;
     if (now.getMonth() + 1 >= 10) fiscalYear += 1;
-    let typeStatus =  "waitingApproval" 
+    let typeStatus = "waitingApproval,attendMeeting";
     const responseOffice = await api.get("/allForms", {
       params: {
         fiscalYear,
@@ -133,15 +133,6 @@ const pulldata = async () => {
       },
     });
     console.log("res", responseOffice);
-
-    // ปรับเปลี่ยนเงื่อนไข filter ให้เหลือแค่ "waitingApproval"
-    // const filteredForms = res.data
-    //   .filter(
-    //     (form) =>
-    //       form.form_status === "waitingApproval" 
-    //   )
-    //   .sort((a, b) => b.form_id - a.form_id);
-    // console.log("filteredForms", filteredForms);
 
     data.allForm = responseOffice.data.map(form => {
       return {

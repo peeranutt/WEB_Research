@@ -37,8 +37,10 @@
         <option value="associate">รองคณบดี</option>
         <option value="dean">คณบดี</option>
         <option value="waitingApproval">รออนุมัติ</option>
+        <option value="attendMeeting">เข้าที่ประชุม</option>
         <option value="approve">อนุมัติ</option>
         <option value="notApproved">ไม่อนุมัติ</option>
+        <option value="return">ตีกลับ</option>
       </select>
     </div>
 
@@ -51,17 +53,23 @@
     </div>
 
     <!-- List -->
-    <FormCard
-      v-for="form in data.allForm"
-      :key="form.form_id"
-      :form="form"
-      :page="'history'"
-      :roleConferenceMap="roleConferenceMap"
-      :rolePageChargeMap="rolePageChargeMap"
-      :roleResearchKRISMap="roleResearchKRISMap"
-      :showAmount="true"
-      :showStatus="true"
-    />
+     <div v-if="data.allForm && data.allForm.length > 0">
+      <FormCard
+        v-for="form in data.allForm"
+        :key="form.form_id"
+        :form="form"
+        :page="'history'"
+        :roleConferenceMap="roleConferenceMap"
+        :rolePageChargeMap="rolePageChargeMap"
+        :roleResearchKRISMap="roleResearchKRISMap"
+        :showAmount="true"
+        :showStatus="true"
+      />
+    </div>
+
+    <div v-else class="text-center text-gray-400 text-3xl">
+      <p>ไม่มีเอกสาร</p>
+    </div>
   </div>
 </template>
 

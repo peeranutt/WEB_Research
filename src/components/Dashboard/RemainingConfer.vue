@@ -16,9 +16,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, watch } from "vue";
 import { Chart, ArcElement, Tooltip, Legend } from "chart.js";
-import { DateTime } from "luxon";
 import api from "@/setting/api";
 
 const Budget = ref(0);
@@ -29,11 +28,20 @@ Chart.register(ArcElement, Tooltip, Legend);
 const chartCanvas = ref(null);
 let chartInstance = null;
 
-const { year } = defineProps(["year"]);
+// const { year } = defineProps(["year"]);
+
+const props = defineProps({
+  year: {
+    type: Number,
+    required: true,
+  },
+});
+
 
 const getData = async () => {
   try {
-    const response = await api.get(`/remainingConference/${year}`);
+    console.log("props.year", props.year)
+    const response = await api.get(`/remainingConference/${props.year}`);
 
     Budget.value = response.data[0]?.Conference_amount || 0;
     remainingBudget.value = response.data[0]?.total_remaining_credit_limit || 0;
@@ -93,7 +101,7 @@ const creatChart = () => {
 };
 
 watch(
-  () => year,
+  () => props.year,
   (newVal) => {
     console.log("เปลี่ยนปีเป็น:", newVal);
     getData();
@@ -101,7 +109,7 @@ watch(
   { immediate: true }
 );
 
-watch([usedBudget, remainingBudget], () => {
-  creatChart();
-});
+// watch([usedBudget, remainingBudget], () => {
+//   creatChart();
+// });
 </script>

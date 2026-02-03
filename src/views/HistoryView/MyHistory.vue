@@ -34,9 +34,23 @@
       </div>
     </div>
 
-    <FormCard v-for="form in data.allForm" :key="form.form_id" :form="form" :page="'history'"
-      :roleConferenceMap="roleConferenceMap" :rolePageChargeMap="rolePageChargeMap"
-      :roleResearchKRISMap="roleResearchKRISMap" :showAmount="true" :showStatus="true" />
+    <div v-if="data.allForm && data.allForm.length > 0">
+      <FormCard
+        v-for="form in data.allForm"
+        :key="form.form_id"
+        :form="form"
+        :page="'history'"
+        :roleConferenceMap="roleConferenceMap"
+        :rolePageChargeMap="rolePageChargeMap"
+        :roleResearchKRISMap="roleResearchKRISMap"
+        :showAmount="true"
+        :showStatus="true"
+      />
+    </div>
+
+    <div v-else class="text-center text-gray-400 text-3xl">
+      <p>ไม่มีเอกสาร</p>
+    </div>
 
   </div>
 </template>
@@ -109,7 +123,7 @@ const pulldata = async () => {
     console.log("data.allForm",data.allForm)
   } catch (error) {
     console.error(error);
-    // alert("ไม่มีเอกสาร");
+    data.allForm = [];
   }
 };
 

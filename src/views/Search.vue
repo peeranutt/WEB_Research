@@ -4,7 +4,7 @@
     <div class="flex flex-row mb-4 w-full">
       <div class="flex flex-row mb-4 w-full">
         <span class="flex mr-2 items-center">ปีงบประมาณ</span>
-        <select class="select select-bordered w-1/6" v-model="data.findFiscalYear">
+        <select class="select select-bordered w-1/6" v-model.number="data.findFiscalYear">
           <option v-for="n in 5" :key="n" :value="fiscalYear - (n - 1)">
             {{ fiscalYear - (n - 1) }}
           </option>
@@ -44,10 +44,6 @@ import DisbursementEachYear from "@/components/Dashboard/DisbursementEachYear.vu
 
 Chart.register(...registerables);
 
-const data = reactive({
-  findFiscalYear: '',
-});
-
 const userStore = useUserStore();
 
 const getThaiFiscalYear = () => {
@@ -57,10 +53,14 @@ const getThaiFiscalYear = () => {
 };
 const fiscalYear = getThaiFiscalYear();
 
-onMounted(() => {
-  if (!data.findFiscalYear) {
-    data.findFiscalYear = fiscalYear
-  }
+const data = reactive({
+  findFiscalYear: fiscalYear,
 })
+
+// onMounted(() => {
+//   if (!data.findFiscalYear) {
+//     data.findFiscalYear = fiscalYear
+//   }
+// })
 
 </script>
