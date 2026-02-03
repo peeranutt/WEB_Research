@@ -1,39 +1,52 @@
 <template>
   <div class="container my-10 mx-auto h-screen">
-    <div class="h-[50%]">
-      <p class="text-xl font-bold mb-2">เอกสารต้องตรวจสอบ</p>
-      <div class="h-full p-2 mb-2 border rounded-lg overflow-auto">
-        <FormCard
-          v-for="form in listForm.forms"
-          :key="form.form_id"
-          :form="form"
-          :page="'officer'"
-          :roleConferenceMap="roleConferenceMap"
-          :rolePageChargeMap="rolePageChargeMap"
-          :roleResearchKRISMap="roleResearchKRISMap"
-          :showAmount="false"
-          :showStatus="false"
-        />
+    <!-- name of each tab group should be unique -->
+    <div class="tabs tabs-box">
+      <input
+        type="radio"
+        name="my_tabs_1"
+        class="tab"
+        aria-label="เอกสารต้องตรวจสอบ"
+        checked="checked"
+      />
+      <div class="tab-content bg-base-100 border-base-300 p-6">
+        <div class="h-[50%]">
+          <p class="text-xl font-bold mb-2">เอกสารต้องตรวจสอบ</p>
+          <div class="h-full p-2 mb-2">
+            <FormCard
+              v-for="form in listForm.forms"
+              :key="form.form_id"
+              :form="form"
+              :page="'officer'"
+              :roleConferenceMap="roleConferenceMap"
+              :rolePageChargeMap="rolePageChargeMap"
+              :roleResearchKRISMap="roleResearchKRISMap"
+              :showAmount="false"
+              :showStatus="false"
+            />
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="h-[40%]">
-      <p class="text-xl font-bold mt-10 mb-2">เอกสารที่ถูกตีกลับ</p>
-      <div class="h-full p-2 mb-2 border rounded-lg overflow-auto">
-        <FormCard
-          v-for="form in listForm.return"
-          :key="form.form_id"
-          :form="form"
-          :page="'officer'"
-          :roleConferenceMap="roleConferenceMap"
-          :rolePageChargeMap="rolePageChargeMap"
-          :roleResearchKRISMap="roleResearchKRISMap"
-          :showAmount="false"
-          :showStatus="false"
-          :eoffice="false"
-          :comment="form.return_note"
-          :who="form.past_return"
-        />
+      <input type="radio" name="my_tabs_1" class="tab" aria-label="เอกสารที่ถูกตีกลับ" />
+      <div class="tab-content bg-base-100 border-base-300 p-6">
+        <p class="text-xl font-bold mb-2">เอกสารที่ถูกตีกลับ</p>
+        <div class="h-full p-2 mb-2">
+          <FormCard
+            v-for="form in listForm.return"
+            :key="form.form_id"
+            :form="form"
+            :page="'officer'"
+            :roleConferenceMap="roleConferenceMap"
+            :rolePageChargeMap="rolePageChargeMap"
+            :roleResearchKRISMap="roleResearchKRISMap"
+            :showAmount="false"
+            :showStatus="false"
+            :eoffice="false"
+            :comment="form.return_note"
+            :who="form.past_return"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -148,18 +161,20 @@ const fetchOfficerData = async () => {
     listForm.return = responseOffice.data.filter(
       (form) =>
         form.form_status === "return" &&
-        form.return_to === userStore.user.user_role
+        form.return_to === userStore.user.user_role,
     );
     const allReturnedForms = responseOffice.data.filter(
-        (form) => form.form_status === "return"
+      (form) => form.form_status === "return",
     );
     console.log("All Forms with status 'return':", allReturnedForms);
-    
+
     // 💡 ตรวจสอบค่า return_to ในฟอร์มเหล่านั้นเทียบกับ user_role
-    allReturnedForms.forEach(form => {
-        console.log(`Return Form ID: ${form.form_id}, Status: ${form.form_status}, Return To: ${form.return_to}, User Role: ${userStore.user.user_role}`);
+    allReturnedForms.forEach((form) => {
+      console.log(
+        `Return Form ID: ${form.form_id}, Status: ${form.form_status}, Return To: ${form.return_to}, User Role: ${userStore.user.user_role}`,
+      );
     });
-    
+
     console.log("Final listForm.return count:", listForm.return.length);
   } catch (error) {
     console.error("Error fetching Officer data:", error);
