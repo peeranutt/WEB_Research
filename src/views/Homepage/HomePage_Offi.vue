@@ -4,14 +4,17 @@
     <div class="tabs tabs-box">
       <input
         type="radio"
-        name="my_tabs_1"
+        name="my_tabs"
         class="tab"
         aria-label="เอกสารต้องตรวจสอบ"
-        checked="checked"
+        value="doc"
+        v-model="activeTab"
+        :class="
+          activeTab === 'doc' ? 'font-bold text-lg' : 'text-base-content text-base'
+        "
       />
       <div class="tab-content bg-base-100 border-base-300 p-6">
         <div class="h-[50%]">
-          <p class="text-xl font-bold mb-2">เอกสารต้องตรวจสอบ</p>
           <div class="h-full p-2 mb-2">
             <FormCard
               v-for="form in listForm.forms"
@@ -28,9 +31,19 @@
         </div>
       </div>
 
-      <input type="radio" name="my_tabs_1" class="tab" aria-label="เอกสารที่ถูกตีกลับ" />
+      <input
+        type="radio"
+        name="my_tabs"
+        class="tab"
+        aria-label="เอกสารที่ถูกตีกลับ"
+        value="return"
+        v-model="activeTab"
+        :class="
+          activeTab === 'return'
+            ? 'font-bold text-lg' : 'text-base-content text-base'
+        "
+      />
       <div class="tab-content bg-base-100 border-base-300 p-6">
-        <p class="text-xl font-bold mb-2">เอกสารที่ถูกตีกลับ</p>
         <div class="h-full p-2 mb-2">
           <FormCard
             v-for="form in listForm.return"
@@ -60,6 +73,8 @@ import { useRouter } from "vue-router";
 import FormCard from "@/components/form/FormCard.vue";
 
 const router = useRouter();
+
+const activeTab = ref("doc");
 
 const userStore = useUserStore();
 const listForm = reactive({
