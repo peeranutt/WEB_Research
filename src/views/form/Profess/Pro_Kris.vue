@@ -195,15 +195,28 @@
       <button @click="saveDraft" class="bg-blue-500 text-white px-4 py-2 rounded mr-3">
         บันทึกแบบร่าง
       </button>
-      <button @click="NewKris" class="btn btn-success text-white rounded">
-        บันทึกข้อมูล
+      <button 
+        @click="NewKris"
+        :disabled="loading" 
+        class="btn btn-success text-white rounded">
+        {{ loading ? "กำลังบันทึก..." : "บันทึก" }}
       </button>
+    </div>
+    <!-- Popup Loading -->
+    <div
+      v-if="loading"
+      class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center"
+    >
+      <div class="bg-white rounded-xl p-6 flex flex-col items-center gap-4 shadow-lg">
+        <div class="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+        <p class="text-gray-700 font-medium">กำลังบันทึกข้อมูล...</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, reactive, onMounted } from "vue";
+import { computed, reactive, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
 import { useVuelidate } from "@vuelidate/core";
@@ -234,6 +247,8 @@ if (!userStore.user.user_signature) {
   alert("กรุณาอัปโหลดลายเซ็น");
   router.push("/profile");
 }
+
+const loading = ref(false);
 
 const formData = reactive({
   projectTH: "",
@@ -397,11 +412,13 @@ const handleFile = (event, fieldName) => {
 };
 
 const NewKris = async () => {
+  if (loading.value) return;
   console.log("NewKris", JSON.stringify(formData));
   const result = await v$.value.$validate();
 
   if (result) {
     try {
+      loading.value = true
       const Dataforbackend = {
         user_id: user.value?.user_id,
         name_research_th: formData.projectTH,
@@ -438,6 +455,8 @@ const NewKris = async () => {
       );
 
       alert("ไม่สามารถส่งข้อมูล โปรดลองอีกครั้งในภายหลัง");
+    } finally {
+      loading.value = false;
     }
   } else {
     alert("โปรดกรอกข้อมูลให้ครบถ้วน และถูกต้อง");
