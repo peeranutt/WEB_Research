@@ -44,14 +44,6 @@
       </select>
     </div>
 
-    <!-- Empty State -->
-    <div
-      v-if="data.isEmpty"
-      class="text-center text-gray-500 my-10"
-    >
-      ไม่พบเอกสารในสถานะนี้
-    </div>
-
     <!-- List -->
      <div v-if="data.allForm && data.allForm.length > 0">
       <FormCard

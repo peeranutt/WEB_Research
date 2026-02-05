@@ -4,7 +4,7 @@
       class="my-2 p-4 border border-[#D9D9D9] rounded-md text-black hover:cursor-pointer"
     >
       <h2 class="text-lg font-bold">{{ getTitle(form) }}</h2>
-      <div class="flex flex-row w-full justify-between pt-2">
+      <div class="flex flex-row w-full justify-between pt-2 items-center">
         <div>
           <div class="flex">
             <h4 class="mr-5">ชื่อผู้ขออนุมัติ : {{ form.user_nameth }}</h4>
@@ -62,18 +62,26 @@
 
         <!-- Status -->
         <div v-if="showStatus" class="flex justify-end items-center">
-          <p class="text-red-500 mr-5" v-if="form.form_status == 'notApproved'">
-            สถานะ{{ showTHstatus(form.form_status) }}
-          </p>
-          <p
-            class="text-green-500 mr-5"
-            v-else-if="form.form_status == 'approve'"
+          <div
+            v-if="form.form_status == 'notApproved'"
+            class="text-red-500 flex flex-col gap-2"
           >
-            สถานะ{{ showTHstatus(form.form_status) }}
-          </p>
-          <p class="text-yellow-500 mr-5" v-else>
-            สถานะ{{ showTHstatus(form.form_status) }}
-          </p>
+            <p>สถานะ{{ showTHstatus(form.form_status) }}</p>
+            <p>อัปเดตเมื่อ {{ formatThaiDate(form.date_form_edit) }}</p>
+          </div>
+
+          <div
+            v-else-if="form.form_status == 'approve'"
+            class="text-green-500 flex flex-col gap-2"
+          >
+            <p>สถานะ{{ showTHstatus(form.form_status) }}</p>
+            <p>อัปเดตเมื่อ {{ formatThaiDate(form.date_form_edit) }}</p>
+          </div>
+
+          <div v-else class="text-yellow-500 flex flex-col gap-2">
+            <p>สถานะ{{ showTHstatus(form.form_status) }}</p>
+            <p>อัปเดตเมื่อ {{ formatThaiDate(form.date_form_edit) }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -213,7 +221,7 @@ const showTHstatus = (status) => {
   } else if (status == "waitingApproval") {
     return "รออนุมัติ";
   } else if (status == "attendMeeting") {
-    return "เข้าที่ประชุม"
+    return "เข้าที่ประชุม";
   } else if (status == "return") {
     return "ถูกตีกลับ";
   }
