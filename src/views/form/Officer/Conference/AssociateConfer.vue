@@ -51,7 +51,7 @@
         </span>
 
         <textarea
-          class="textarea textarea-bordered w-full"
+          class="textarea textarea-bordered w-full disabled:placeholder:text-red-500"
           @input="handleInput('commentReason', $event.target.value)"
         ></textarea>
         <span

@@ -76,6 +76,7 @@
             <div>
               <TextArea
                 label="เนื่องจาก"
+                class="textarea textarea-bordered w-full disabled:placeholder:text-red-500"
                 :disabled="true"
                 :placeholder="formData.offic.p_dean_reason"
               />
