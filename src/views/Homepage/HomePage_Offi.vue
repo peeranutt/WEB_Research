@@ -10,23 +10,28 @@
         value="doc"
         v-model="activeTab"
         :class="
-          activeTab === 'doc' ? 'font-bold text-lg' : 'text-base-content text-base'
+          activeTab === 'doc'
+            ? 'font-bold text-lg'
+            : 'text-base-content text-base'
         "
       />
       <div class="tab-content bg-base-100 border-base-300 p-6">
         <div class="h-[50%]">
           <div class="h-full p-2 mb-2">
-            <FormCard
-              v-for="form in listForm.forms"
-              :key="form.form_id"
-              :form="form"
-              :page="'officer'"
-              :roleConferenceMap="roleConferenceMap"
-              :rolePageChargeMap="rolePageChargeMap"
-              :roleResearchKRISMap="roleResearchKRISMap"
-              :showAmount="false"
-              :showStatus="false"
-            />
+            <p v-if="!listForm.forms.length">ไม่มีเอกสารที่ต้องตรวจสอบ</p>
+            <div v-else>
+              <FormCard
+                v-for="form in listForm.forms"
+                :key="form.form_id"
+                :form="form"
+                :page="'officer'"
+                :roleConferenceMap="roleConferenceMap"
+                :rolePageChargeMap="rolePageChargeMap"
+                :roleResearchKRISMap="roleResearchKRISMap"
+                :showAmount="false"
+                :showStatus="false"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -40,25 +45,30 @@
         v-model="activeTab"
         :class="
           activeTab === 'return'
-            ? 'font-bold text-lg' : 'text-base-content text-base'
+            ? 'font-bold text-lg'
+            : 'text-base-content text-base'
         "
       />
       <div class="tab-content bg-base-100 border-base-300 p-6">
         <div class="h-full p-2 mb-2">
-          <FormCard
-            v-for="form in listForm.return"
-            :key="form.form_id"
-            :form="form"
-            :page="'officer'"
-            :roleConferenceMap="roleConferenceMap"
-            :rolePageChargeMap="rolePageChargeMap"
-            :roleResearchKRISMap="roleResearchKRISMap"
-            :showAmount="false"
-            :showStatus="false"
-            :eoffice="false"
-            :comment="form.return_note"
-            :who="form.past_return"
-          />
+          <p v-if="!listForm.return.length">ไม่มีเอกสารที่ถูกตีกลับ</p>
+
+          <div v-else>
+            <FormCard
+              v-for="form in listForm.return"
+              :key="form.form_id"
+              :form="form"
+              :page="'officer'"
+              :roleConferenceMap="roleConferenceMap"
+              :rolePageChargeMap="rolePageChargeMap"
+              :roleResearchKRISMap="roleResearchKRISMap"
+              :showAmount="false"
+              :showStatus="false"
+              :eoffice="false"
+              :comment="form.return_note"
+              :who="form.past_return"
+            />
+          </div>
         </div>
       </div>
     </div>

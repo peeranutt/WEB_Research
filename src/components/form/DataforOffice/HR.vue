@@ -184,7 +184,7 @@
             v-model="formData.offic.c_hr_result"
           />
           <textarea
-            class="textarea textarea-bordered w-full"
+            class="textarea textarea-bordered w-full disabled:placeholder:text-red-500"
             :disabled="true"
             :placeholder="formData.offic.c_hr_reason"
           ></textarea>
