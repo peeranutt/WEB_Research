@@ -160,7 +160,7 @@
           <textarea
           v-if="formData.offic.c_noteOther != null"
             :placeholder="formData.offic.c_noteOther"
-            class="textarea textarea-bordered w-full"
+            class="textarea textarea-bordered w-full disabled:placeholder:text-red-500"
             :disabled="true"
           ></textarea>
         </SectionWrapper>

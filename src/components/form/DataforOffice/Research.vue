@@ -29,22 +29,22 @@
               />
             </div>
             <textarea
-              class="textarea textarea-bordered w-full"
+              class="textarea textarea-bordered w-full disabled:placeholder:text-red-500"
               :placeholder="formData.offic.c_comment_quality"
               :disabled="true"
             ></textarea>
 
             <div v-if="formData.offic.c_quality == 'good'" class="py-2">
-            <p class="pb-2">
-              • กรณีที่เป็นการประชุมวิชาการ <b>ระดับดีมาก</b>
-              เลือกวิธีคิดค่าคะแนนคุณภาพ และมีระดับคะแนนคุณภาพของการประชุมฯ
-            </p>
-            <textarea
-              class="textarea textarea-bordered w-full"
-              :placeholder="formData.offic.c_comment_quality_good"
-              :disabled="true"
-            ></textarea>
-          </div>
+              <p class="pb-2">
+                • กรณีที่เป็นการประชุมวิชาการ <b>ระดับดีมาก</b>
+                เลือกวิธีคิดค่าคะแนนคุณภาพ และมีระดับคะแนนคุณภาพของการประชุมฯ
+              </p>
+              <textarea
+                class="textarea textarea-bordered w-full disabled:placeholder:text-red-500"
+                :placeholder="formData.offic.c_comment_quality_good"
+                :disabled="true"
+              ></textarea>
+            </div>
           </div>
           <RadioInput
             label="ข้อมูลถูกต้อง"
@@ -61,6 +61,7 @@
             v-model="formData.offic.c_research_result"
           />
           <TextArea
+            class="textarea textarea-bordered w-full disabled:placeholder:text-red-500"
             :disabled="true"
             :placeholder="formData.offic.c_research_reason"
           />
@@ -209,7 +210,7 @@
             v-model="formData.offic.p_research_result"
           />
           <textarea
-            class="textarea textarea-bordered w-full"
+            class="textarea textarea-bordered w-full disabled:placeholder:text-red-500"
             :disabled="true"
             :placeholder="formData.offic.p_research_reason"
           ></textarea>
