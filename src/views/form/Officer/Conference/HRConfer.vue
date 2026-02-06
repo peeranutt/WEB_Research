@@ -360,7 +360,7 @@ const OfficerConfer = async () => {
           user_confer: formData.isUnder3YearsNoOverseasConf,
           form_status:
             statusMap[formData.radioAuthOffic] || formData.radioAuthOffic,
-          returnto:
+          return_to:
             formData.radioAuthOffic === "return_professor" ? "professor" : null,
           return_note: formData.commentReason || null,
           past_return:

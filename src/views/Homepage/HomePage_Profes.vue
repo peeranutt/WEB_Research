@@ -252,7 +252,7 @@ const getData = async () => {
     }
 
     data.returnForm = response.data.filter(
-      (form) => form.form_status === "return" && form.return_to === user.value?.user_role
+      (form) => form.form_status === "return" && form.user_id === user.value?.user_id && form.return_to === 'professor'
     );
   }
 };

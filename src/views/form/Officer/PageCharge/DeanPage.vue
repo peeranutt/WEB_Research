@@ -14,9 +14,9 @@
         </p>
         <RadioInput label="รับทราบ" value="acknowledge" v-model="formData.acknowledge" />
         <RadioInput label="ไม่รับทราบ" value="notAcknowledge" v-model="formData.acknowledge" />
-        <span v-if="v$.acknowledge.$error" class="text-base font-bold text-red-500 text-left">
+        <!-- <span v-if="v$.acknowledge.$error" class="text-base font-bold text-red-500 text-left">
           {{ v$.acknowledge.$errors[0].$message }}
-        </span>
+        </span> -->
       </SectionWrapper>
     </Mainbox>
 
@@ -127,9 +127,9 @@ const fetchProfessorData = async () => {
 };
 
 const rules = computed(() => ({
-  acknowledge: {
-    required: helpers.withMessage("* กรุณาเลือกข้อมูล *", required),
-  },
+  // acknowledge: {
+  //   required: helpers.withMessage("* กรุณาเลือกข้อมูล *", required),
+  // },
   radioAuthOffic: {
     required: helpers.withMessage("* กรุณาเลือกข้อมูล *", required),
   },
@@ -183,7 +183,7 @@ const OfficerPC = async () => {
         pageC_id: id,
         updated_data: [
           { field: 'dean_id', value: user.value?.user_id },
-          { field: 'p_dean_acknowledge', value: formData.acknowledge },
+          { field: 'p_dean_acknowledge', value: formData.acknowledge || null },
           { field: 'p_dean_result', value: resultMap[formData.radioAuthOffic] },
           { field: 'p_dean_reason', value: formData.reason },
         ],
