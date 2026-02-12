@@ -202,28 +202,17 @@ const roleinThai = (who) => {
     return "เจ้าหน้าที่";
   }
 };
-
 const showTHstatus = (status) => {
-  if (status == "approve") {
-    return "อนุมัติ";
-  } else if (status == "notApproved") {
-    return "ไม่อนุมัติ";
-  } else if (status == "hr") {
-    return "ฝ่ายบริหารทรัพยากรบุคคล";
-  } else if (status == "research") {
-    return "ฝ่ายบริหารงานวิจัย";
-  } else if (status == "finance" || status == "pending") {
-    return "ฝ่ายบริหารการเงิน";
-  } else if (status == "associate") {
-    return "รองคณบดี";
-  } else if (status == "dean") {
-    return "คณบดี";
-  } else if (status == "waitingApproval") {
-    return "รออนุมัติ";
-  } else if (status == "attendMeeting") {
-    return "เข้าที่ประชุม";
-  } else if (status == "return") {
-    return "ถูกตีกลับ";
+  switch (status) {
+    case "approved":
+      return "อนุมัติ";
+    case "rejected":
+      return "ไม่อนุมัติ";
+    case "returned":
+      return "ถูกตีกลับ";
+    default:
+      return "รออนุมัติ";
   }
 };
+
 </script>

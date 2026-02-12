@@ -22,14 +22,10 @@
         <span class="flex ml-2 mr-2 items-center">สถานะเอกสาร</span>
         <select class="select select-bordered w-1/6" v-model="data.typeStatus">
           <option selected :value="'all'">ทั้งหมด</option>
-          <option :value="'hr'">ฝ่ายบริหารทรัพยากรบุคคล</option>
-          <option :value="'research'">ฝ่ายบริหารงานวิจัย</option>
-          <option :value="'finance, pending'">ฝ่ายบริหารการเงิน</option>
-          <option :value="'associate'">รองคณบดี</option>
-          <option :value="'dean'">คณบดี</option>
           <option :value="'waitingApproval'">รออนุมัติ</option>
           <option :value="'approve'">อนุมัติ</option>
           <option :value="'notApproved'">ไม่อนุมัติ</option>
+          <option value="return">ตีกลับ</option>
         </select>
       </div>
     </div>

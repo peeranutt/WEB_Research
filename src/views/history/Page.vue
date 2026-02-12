@@ -1,6 +1,10 @@
 <template>
+  <div>
   <p class="text-2xl font-bold text-center my-10">สถานะ และประวัติเอกสาร</p>
-  <ApprovalSteps :status="formData.form.form_status" type="Page_Charge" />
+  <ApprovalSteps 
+  v-if="formData.form && formData.form.form_status"
+  :status="formData.form.form_status" 
+  type="Page_Charge" />
   <PageChageData :id="id" />
   <Research :id="id" :type="'Page_Charge'" />
   <FinanceAll :id="id" :type="'Page_Charge'" />
@@ -71,6 +75,7 @@
         </button>
       </router-link>
     </div>
+  </div>
   </div>
 </template>
 

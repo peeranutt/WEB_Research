@@ -1,7 +1,10 @@
 <template>
   <div>
     <p class="text-2xl font-bold text-center my-10">สถานะ และประวัติเอกสาร</p>
-    <ApprovalSteps :status="formData.form.form_status" type="conference" />
+    <ApprovalSteps 
+      v-if="form && form.form_status"
+      :status="form.form_status" 
+      type="conference" />
     <ConferenceData :id="id" />
     <HR :id="id" />
     <Research :id="id" :type="'Conference'" />
