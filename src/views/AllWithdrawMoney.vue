@@ -31,8 +31,6 @@
                     <span class="text-base">{{
                       getNameById(listForm.nameP, form.pageC_id)
                     }}</span>
-                    <span class="text-sm px-2 text-red-900">
-                      ({{ getFileById(listForm.nameP, form.pageC_id) }})</span>
                   </span>
                   <span class="text-base text-[#868181]">ขออนุมัติค่า Page Charge</span>
                 </p>
@@ -116,11 +114,6 @@ const fetchOfficerData = async () => {
 const getNameById = (nameList, id) => {
   const nameObj = nameList.find((item) => item[0] === id);
   return nameObj ? nameObj[1].user_nameth : "ไม่พบชื่อ";
-};
-const getFileById = (file, id) => {
-  const fileObj = file.find((item) => item[0] === id);
-  console.log("fileObj", fileObj);
-  return fileObj[1].accepted ? "มีจดหมายตอบรับ" : "ไม่มีจดหมายตอบรับ";
 };
 onMounted(async () => {
   fetchOfficerData();
