@@ -12,11 +12,18 @@ import vue3GoogleLogin from 'vue3-google-login'
 
 //import css tailwind
 import "./assets/style.css"
+import { useUserStore } from './store/userStore';
 
 const app = createApp(App)
 
+const pinia = createPinia();
+app.use(pinia)
+
+const userStore = useUserStore();
+await userStore.fetchUser();
+
 app.use(router)
-app.use(createPinia())
+// app.use(createPinia())
 app.component("v-select", vSelect);
 
 app.use(vue3GoogleLogin, {

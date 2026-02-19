@@ -12,9 +12,9 @@
       <p class="text-lg leading-relaxed pt-5 pb-3">
         ยืนยันตัวตนด้วยบริการของ Google
       </p>
-      <button class="btn w-[80%] border-[#e5e5e5]" @click="login">
-        <img :src="GoogleLogo" class="w-10" alt="Google Logo" />Login With
-        Google
+      <button class="btn w-full lg:w-[80%] border-[#e5e5e5]" @click="login">
+        <img :src="GoogleLogo" class="w-8" alt="Google Logo" />
+        <p>Login With Google</p>
       </button>
     </div>
   </div>
@@ -79,7 +79,7 @@ const login = async () => {
         } catch (error) {
           alert(error.response?.data?.message || "เข้าสู่ระบบล่มเหลว");
         } finally {
-          isLoading.value = false
+          isLoading.value = false;
         }
       },
     });
@@ -87,7 +87,7 @@ const login = async () => {
     googleAuth.requestCode();
   } catch (error) {
     console.log("Login failed:", error);
-    isLoading.value = false
+    isLoading.value = false;
   }
 };
 
@@ -99,5 +99,5 @@ onMounted(async () => {
   if (userStore.user) {
     redirectByRole(userStore.user);
   }
-})
+});
 </script>

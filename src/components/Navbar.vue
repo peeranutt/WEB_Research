@@ -17,7 +17,7 @@
         <div v-if="user" class="flex flex-row">
           <div v-if="!isAdmin && !isProfessor" class="justify-center">
             <div tabindex="0" role="button" class="btn btn-ghost">
-              <router-link to="/Officer" class="font-normal"
+              <router-link to="/homepage/officer" class="font-normal"
                 >ตรวจสอบเอกสาร</router-link
               >
             </div>
@@ -29,9 +29,9 @@
                 tabindex="0"
                 class="dropdown-content menu bg-base-100 rounded-t-none p-2 shadow"
               >
-                <li><router-link to="/homePage">ยื่นเอกสาร</router-link></li>
+                <li><router-link to="/homepage/professor">ยื่นเอกสาร</router-link></li>
                 <li>
-                  <router-link to="/myHistory">สถานะ และประวัติเอกสาร</router-link>
+                  <router-link to="/">สถานะ และประวัติเอกสาร</router-link>
                 </li>
               </ul>
             </div>
@@ -39,22 +39,22 @@
 
           <div v-if="isProfessor" class="justify-center">
             <div tabindex="0" role="button" class="btn btn-ghost">
-              <router-link to="/homePage" class="font-normal">ยื่นเอกสาร</router-link>
+              <router-link to="/homepage/professor" class="font-normal">ยื่นเอกสาร</router-link>
             </div>
             <div tabindex="0" role="button" class="btn btn-ghost">
-              <router-link to="/myHistory" class="font-normal">สถานะ และประวัติเอกสาร</router-link>
+              <router-link to="/" class="font-normal">สถานะ และประวัติเอกสาร</router-link>
             </div>
           </div>
 
           <div v-if="isHRorResearch" class="justify-center">
             <div tabindex="0" role="button" class="btn btn-ghost">
-              <router-link to="/eOffice">เอกสารรออนุมัติ</router-link>
+              <router-link to="/">เอกสารรออนุมัติ</router-link>
             </div>
           </div>
 
           <div v-if="isApprover" class="justify-center">
             <div tabindex="0" role="button" class="btn btn-ghost">
-              <router-link to="/allHistory" class="font-normal"
+              <router-link to="/" class="font-normal"
                 >สถานะ และประวัติเอกสาร</router-link
               >
             </div>
@@ -62,7 +62,7 @@
 
           <div v-if="isFinance" class="justify-center">
             <div tabindex="0" role="button" class="btn btn-ghost">
-              <router-link to="/allWithdrawMoney" class="font-normal"
+              <router-link to="/" class="font-normal"
                 >ขออนุมัติเบิกเงินรายได้</router-link
               >
             </div>
@@ -70,7 +70,7 @@
 
           <div v-if="isAdmin" class="justify-center">
             <div tabindex="0" role="button" class="btn btn-ghost">
-              <router-link to="/changePage" class="font-normal"
+              <router-link to="/homepage/admin" class="font-normal"
                 >เปลี่ยนเงื่อนไขการพิจารณา</router-link
               >
             </div>
@@ -85,7 +85,7 @@
       </div>
     </div>
 
-    <div v-if="!userStore.user">
+    <div v-if="!userStore.isLoading && !userStore.user">
       <router-link
         to="/login"
         class="btn w-full bg-[#4285F4] hover:bg-[#4285F4] text-white ml-10"
@@ -101,7 +101,7 @@
           <div
             tabindex="0"
             role="button"
-            class="btn bg-[#4285F4] hover:bg-[#4285F4] py-[13px] text-white min-w-32"
+            class="btn bg-[#4285F4] hover:bg-[#4285F4] py-[13px] text-white min-w-32 w-fit"
           >
             <p class="font-normal">
               {{ userStore.user.user_nameth }} &nbsp; &#9660;
@@ -112,15 +112,20 @@
             class="dropdown-content menu bg-base-100 rounded-t-none p-2 shadow"
           >
             <li v-if="userStore.user?.user_role != 'admin'">
-              <router-link to="/profile">ข้อมูลส่วนตัว</router-link>
+              <router-link to="/">ข้อมูลส่วนตัว</router-link>
             </li>
             <li @click="logout">
-              <router-link to="/">ออกจากระบบ</router-link>
+              ออกจากระบบ
+              <!-- <router-link to="/logout">ออกจากระบบ</router-link> -->
             </li>
           </ul>
         </div>
       </div>
     </div>
+  </div>
+
+  <div v-if="userStore.isLoading">
+    <span class="loading loading-spinner"></span>
   </div>
 </template>
 
@@ -131,16 +136,21 @@ import { useRouter } from "vue-router";
 import { useUserStore } from "@/store/userStore";
 
 const router = useRouter();
+console.table(router.getRoutes().map(r => r.path))
+
 const userStore = useUserStore();
 const user = computed(() => userStore.user);
 
 const logoRoute = computed(() => {
-  if (!user.value) return "/";
+  if (!user.value) return "/login";
+
   const role = user.value.user_role;
-  if (role === "professor") return "/homePage";
-  if (["hr", "research", "finance", "associate", "dean"].includes(role))
-    return "/Officer";
-  if (role === "admin") return "/admin";
+
+  if (role === "professor") return "/homepage/professor";
+
+  if (["hr", "research", "finance", "associate", "dean"].includes(role)) return "/homepage/officer";
+  if (role === "admin") return "/homepage/admin";
+
   return "/";
 });
 
