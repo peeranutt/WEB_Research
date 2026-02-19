@@ -28,8 +28,8 @@ import Pro_Confer from "@/views/form/Profess/Pro_Confer.vue";
 import Pro_Page from "@/views/form/Profess/Pro_Page.vue";
 import Pro_Kris from "@/views/form/Profess/Pro_Kris.vue";
 
-import Modi_Confer from "@/components/form/ModifiedForm/ConferenceModi.vue"
-import Modi_Page from "@/components/form/ModifiedForm/PageChangeModi.vue"
+import Modi_Confer from "@/components/form/ModifiedForm/ConferenceModi.vue";
+import Modi_Page from "@/components/form/ModifiedForm/PageChangeModi.vue";
 
 import offic_hrConfer from "@/views/form/Officer/Conference/HRConfer.vue";
 import offic_resConfer from "@/views/form/Officer/Conference/ResearchConfer.vue";
@@ -51,7 +51,7 @@ import WMPageCharge from "@/components/form/WithdrawMoney/WMPageCharge.vue";
 import Profile from "@/views/Profile.vue";
 import summary from "@/views/Summary.vue";
 
-import ChangePage from '@/views/ChangePage.vue';
+import ChangePage from "@/views/ChangePage.vue";
 import testlogin from "@/views/testlogin.vue";
 
 const router = createRouter({
@@ -61,235 +61,263 @@ const router = createRouter({
       path: "/eOffice",
       name: "eOffice",
       component: eOffice,
-      meta: { requiresAuth: true, role: ["hr", "research"] },
+      meta: {
+        requiresAuth: true,
+        requiresSignature: true,
+        role: ["hr", "research"],
+      },
     },
     {
       path: "/",
       name: "Search",
       component: Search,
-      meta: { requiresAuth: false },
+      meta: { requiresAuth: false, requiresSignature: false },
     },
     {
       path: "/homePage",
       name: "HomePageProfes",
       component: HomePage_Profes,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresSignature: true },
     },
     {
       path: "/officer",
       name: "HomePageOfficer",
       component: HomePage_Offi,
-      meta: { requiresAuth: true, role: ["hr", "research", "finance", "associate", "dean"] },
+      meta: {
+        requiresAuth: true,
+        requiresSignature: true,
+        role: ["hr", "research", "finance", "associate", "dean"],
+      },
     },
     {
       path: "/admin",
       name: "HomepageAdmin",
       component: Homepage_Admin,
-      meta: { requiresAuth: true, role: ["admin"] },
+      meta: { requiresAuth: true, requiresSignature: true, role: ["admin"] },
     },
     {
       path: "/login",
       name: "Login",
       component: LoginPage,
-      meta: { requiresAuth: false },
+      meta: { requiresAuth: false, requiresSignature: false },
     },
     {
       path: "/myHistory",
       name: "History",
       component: HistoryView,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresSignature: true },
     },
     {
       path: "/historyOffice",
       name: "HistoryofOffice",
       component: HistoryViewOffice,
-      meta: { requiresAuth: true, role: ["hr", "research"] },
+      meta: {
+        requiresAuth: true,
+        requiresSignature: true,
+        role: ["hr", "research"],
+      },
     },
     {
       path: "/allHistory",
       name: "allHistory",
       component: AllHistory,
-      meta: { requiresAuth: true, role: ["hr", "research", "finance", "associate", "dean"] },
+      meta: {
+        requiresAuth: true,
+        requiresSignature: true,
+        role: ["hr", "research", "finance", "associate", "dean"],
+      },
     },
     {
       path: "/formConference",
       name: "Form_Confer",
       component: Pro_Confer,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresSignature: true },
     },
     {
       path: "/formPageCharge",
       name: "FormPC",
       component: Pro_Page,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresSignature: true },
     },
     {
       path: "/formKris",
       name: "FormKris",
       component: Pro_Kris,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresSignature: true },
     },
     {
       path: "/modifiedConference/:id",
       name: "ModifiedConfer",
       component: Modi_Confer,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresSignature: true },
     },
     {
       path: "/modifiedPageCharge/:id",
       name: "ModifiedPage",
       component: Modi_Page,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresSignature: true },
     },
     {
       path: "/officeFormConference/hr/:id",
       name: "officeFormConferenceHr",
       component: offic_hrConfer,
-      meta: { requiresAuth: true, role: ["hr"] },
+      meta: { requiresAuth: true, requiresSignature: true, role: ["hr"] },
     },
     {
       path: "/officeFormConference/research/:id",
       name: "officeFormConferenceRes",
       component: offic_resConfer,
-      meta: { requiresAuth: true, role: ["research"] },
+      meta: { requiresAuth: true, requiresSignature: true, role: ["research"] },
     },
     {
       path: "/officeFormConference/finance/:id",
       name: "officeFormConferenceFinc",
       component: offic_fincConfer,
-      meta: { requiresAuth: true, role: ["finance"] },
+      meta: { requiresAuth: true, requiresSignature: true, role: ["finance"] },
     },
     {
       path: "/officeFormConference/associate/:id",
       name: "officeFormConferenceAssoc",
       component: offic_associateConfer,
-      meta: { requiresAuth: true, role: ["associate"] },
+      meta: {
+        requiresAuth: true,
+        requiresSignature: true,
+        role: ["associate"],
+      },
     },
     {
       path: "/officeFormConference/dean/:id",
       name: "officeFormConferenceDean",
       component: offic_deanConfer,
-      meta: { requiresAuth: true, role: ["dean"] },
+      meta: { requiresAuth: true, requiresSignature: true, role: ["dean"] },
     },
     {
       path: "/officeFormPageCharge/research/:id",
       name: "OfficFormPCRes",
       component: offic_resPage,
-      meta: { requiresAuth: true, role: ["research"] },
+      meta: { requiresAuth: true, requiresSignature: true, role: ["research"] },
     },
     {
       path: "/officeFormPageCharge/finance/:id",
       name: "OfficFormPCFin",
       component: offic_financePage,
-      meta: { requiresAuth: true, role: ["finance"] },
+      meta: { requiresAuth: true, requiresSignature: true, role: ["finance"] },
     },
     {
       path: "/officeFormPageCharge/associate/:id",
       name: "OfficFormPCAssoc",
       component: offic_associatePage,
-      meta: { requiresAuth: true, role: ["associate"] },
+      meta: {
+        requiresAuth: true,
+        requiresSignature: true,
+        role: ["associate"],
+      },
     },
     {
       path: "/officeFormPageCharge/dean/:id",
       name: "OfficFormPCDean",
       component: offic_deanPage,
-      meta: { requiresAuth: true, role: ["dean"] },
+      meta: { requiresAuth: true, requiresSignature: true, role: ["dean"] },
     },
     {
       path: "/officeFormKris/research/:id",
       name: "OfficFormKris",
       component: offic_Kris,
-      meta: { requiresAuth: true, role: ["research"] },
+      meta: { requiresAuth: true, requiresSignature: true, role: ["research"] },
     },
     {
       path: "/status/Conference/:id",
       name: "StatusConfer",
       component: StatusConferView,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresSignature: true },
     },
     {
       path: "/status/PageCharge/:id",
       name: "StatusPC",
       component: StatusPCView,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresSignature: true },
     },
     {
       path: "/status/Kris/:id",
       name: "StatusKris",
       component: StatusKRISView,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresSignature: true },
     },
     {
       path: "/allWithdrawMoney",
       name: "AllWithdrawMoney",
       component: AllWithdrawMoney,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresSignature: true },
     },
     {
       path: "/withdrawMoney/Conference/:id",
       name: "WMConference",
       component: WMConference,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresSignature: true },
     },
     {
       path: "/withdrawMoney/pageCharge/:id",
       name: "WMPageCharge",
       component: WMPageCharge,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresSignature: true },
     },
     {
       path: "/profile",
       name: "Profile",
       component: Profile,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresSignature: false },
     },
     {
       path: "/history/conference/:id",
       name: "HistoryConfer",
       component: his_confer,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresSignature: true },
     },
     {
       path: "/history/pageCharge/:id",
       name: "HistoryPageCharge",
       component: his_pageCharge,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresSignature: true },
     },
     {
       path: "/history/kris/:id",
       name: "HistoryKris",
       component: his_kris,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresSignature: true },
     },
     {
       path: "/pdf/conference/:id",
       name: "ConferPDF",
       component: ConferPDF,
-      meta: { hideNavbar: true, requiresAuth: true },
+      meta: { hideNavbar: true, requiresAuth: true, requiresSignature: true },
     },
     {
       path: "/pdf/pageCharge/:id",
       name: "PageCPDF",
       component: PageCPDF,
-      meta: { hideNavbar: true, requiresAuth: true },
+      meta: { hideNavbar: true, requiresAuth: true, requiresSignature: true },
     },
     {
       path: "/summary",
       name: "summary",
       component: summary,
-      meta: { requiresAuth: true, role: ["hr", "research", "finance", "associate", "dean", "admin"] },
+      meta: {
+        requiresAuth: true,
+        requiresSignature: true,
+        role: ["hr", "research", "finance", "associate", "dean", "admin"],
+      },
     },
     {
       path: "/changePage",
       name: "ChangePage",
       component: ChangePage,
-      meta: { requiresAuth: true, role: ["admin"] },
+      meta: { requiresAuth: true, requiresSignature: true, role: ["admin"] },
     },
     {
       path: "/testlogin",
       name: "testlogin",
       component: testlogin,
-      meta: { requiresAuth: false},
+      meta: { requiresAuth: false, requiresSignature: false },
     },
   ],
 });
@@ -297,28 +325,25 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore();
 
-  // ตรวจสอบการล็อกอินก่อน โดยเช็คจาก localStorage หรือค่า loggedIn
   if (to.meta.requiresAuth) {
-    // ถ้ายังไม่ได้ล็อกอิน (ไม่มี userRole หรือไม่มี token หรือสถานะอื่นๆ ที่ใช้ในการตรวจสอบการล็อกอิน)
     if (!userStore.user) {
-      // ถ้ายังไม่ได้โหลดข้อมูลผู้ใช้ (จาก fetchUser) ให้เรียกใช้
       await userStore.fetchUser();
     }
-    
-    // เช็คว่า user ยังไม่ได้ล็อกอิน (ไม่พบ userRole)
+
     if (!userStore.userRole) {
-      // return next("/login"); // ถ้ายังไม่ได้ล็อกอิน ให้ไปหน้า login
       return next("/testlogin");
     }
   }
 
-  // ถ้ามี role ที่กำหนด และ user ไม่มี role หรือ role ไม่อยู่ในรายการที่อนุญาต
-  if (to.meta.role && !to.meta.role.includes(userStore.userRole)) {
-    return next("/"); // ถ้าไม่มีสิทธิ์เข้าถึง ให้ไปหน้า home
+  if (to.meta.requiresSignature && !userStore.user.user_signature) {
+    return next("/profile");
   }
 
-  next(); // อนุญาตให้เข้าหน้า
-});
+  if (to.meta.role && !to.meta.role.includes(userStore.userRole)) {
+    return next("/");
+  }
 
+  next();
+});
 
 export default router;

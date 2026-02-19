@@ -197,11 +197,6 @@ const router = useRouter();
 const userStore = useUserStore();
 const user = computed(() => userStore.user);
 
-if (!userStore.user.user_signature) {
-  alert("กรุณาอัปโหลดลายเซ็น");
-  router.push("/profile");
-}
-
 const formatThaiDate = (dateString) => {
   if (!dateString) return "ไม่พบวันที่";
 

@@ -177,9 +177,8 @@ const rules = {
 const v$ = useVuelidate(rules, data);
 
 const getDataMoney = async () => {
-  console.log("id", data.id);
   const res = await api.get(`/sumBudgets/${user.value?.user_id}`);
-  console.log("res", res.data);
+  
   data.approvedPC = res.data.sumPC;
   data.approvedConfer = res.data.sumConfer;
   data.totalAll = res.data.totalMoney;
@@ -190,6 +189,7 @@ const getDataMoney = async () => {
 onMounted(async () => {
   await userStore.fetchUser();
   await getDataMoney();
+
   data.id = user.value?.user_id;
 });
 
@@ -197,10 +197,8 @@ const handleFile = (event, fieldName) => {
   const signature = event.target.files[0];
   if (signature) {
     data[fieldName] = signature;
-    console.log(`File assigned to ${fieldName}:`, data[fieldName]);
-    console.log("Updated data:", data);
   } else {
-    console.log(`No file selected for ${fieldName}.`);
+    console.error(`No file selected for ${fieldName}.`);
   }
 };
 
@@ -216,21 +214,19 @@ const updatesignature = async () => {
         user_signature: data.signature,
       };
 
-      console.log("DataforUpdate : ", DataforUpdate);
-
       const response = await api.put("/uploadSignature", DataforUpdate, {
         headers: {
           "Content-Type": "multipart/form-data", // Required for file uploads
         },
       });
 
-      console.log(response);
-
       alert("อัปโหลดลายเซ็นเรียบร้อยแล้ว");
+
+      await userStore.fetchUser(true);
 
       router.push("/");
     } catch (error) {
-      console.log("error", error);
+      console.error(error);
     }
   } else {
     alert("โปรดกรอกข้อมูลให้ครบถ้วน");

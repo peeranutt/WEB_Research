@@ -92,11 +92,6 @@ const listForm = reactive({
   return: [],
 });
 
-if (!userStore.user.user_signature) {
-  alert("กรุณาอัปโหลดลายเซ็น");
-  router.push("/profile");
-}
-
 const isLoading = ref(true);
 
 const roleConferenceMap = {

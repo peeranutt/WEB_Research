@@ -58,13 +58,6 @@ const listForm = reactive({
   nameP: [],
 });
 
-// console.log("user", userStore.user)
-
-if (!userStore.user.user_signature) {
-  alert("กรุณาอัปโหลดลายเซ็น");
-  router.push("/profile");
-}
-
 const isLoading = ref(true);
 const fetchOfficerData = async () => {
   try {
