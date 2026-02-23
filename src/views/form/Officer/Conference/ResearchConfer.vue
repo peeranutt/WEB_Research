@@ -95,15 +95,28 @@
     </Mainbox>
 
     <div class="flex justify-end">
-      <button @click="OfficerConfer" class="btn btn-success text-white">
-        บันทึกข้อมูล
+      <button 
+        @click="OfficerConfer"
+        :disabled="loading" 
+        class="btn btn-success text-white rounded">
+        {{ loading ? "กำลังบันทึก..." : "บันทึก" }}
       </button>
+    </div>
+    <!-- Popup Loading -->
+    <div
+      v-if="loading"
+      class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center"
+    >
+      <div class="bg-white rounded-xl p-6 flex flex-col items-center gap-4 shadow-lg">
+        <div class="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+        <p class="text-gray-700 font-medium">กำลังบันทึกข้อมูล...</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, reactive, computed } from "vue";
+import { onMounted, reactive, computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers, requiredIf } from "@vuelidate/validators";
@@ -118,13 +131,15 @@ import RadioInput from "@/components/Input/RadioInput.vue";
 import ConferenceData from "@/components/form/DataforOffice/Conference.vue";
 import HR from "@/components/form/DataforOffice/HR.vue";
 
+const loading = ref(false);
+
 const formData = reactive({
   conference: [],
   score: [],
   docSubmitDate: DateTime.now().toISODate(),
   radioAuthOffic: "",
   commentReason: "",
-  returnto: "",
+  return_to: "",
   radioQuality: "",
   commentQuality: "",
   commentQualityGood: "",
@@ -203,6 +218,7 @@ const resultMap = {
 };
 
 const OfficerConfer = async () => {
+  if (loading.value) return;
   const result = await v$.value.$validate();
 
   if (result) {
@@ -212,6 +228,7 @@ const OfficerConfer = async () => {
 
     if (formData.oldData.form_status != "return") {
       try {
+        loading.value = true
         const dataForBackend = {
           conf_id: id,
           updated_data: [
@@ -233,7 +250,7 @@ const OfficerConfer = async () => {
             },
           ],
           form_status: statusMap[formData.radioAuthOffic],
-          returnto: returnMap[formData.radioAuthOffic],
+          return_to: returnMap[formData.radioAuthOffic],
           return_note: formData.commentReason || null,
           past_return:
             statusMap[formData.radioAuthOffic] == "return"
@@ -248,9 +265,12 @@ const OfficerConfer = async () => {
       } catch (error) {
         console.log("Error saving code : ", error);
         alert("ไม่สามารถส่งข้อมูล โปรดลองอีกครั้งในภายหลัง");
+      } finally {
+        loading.value = false;
       }
     } else if (formData.oldData.form_status == "return") {
       try {
+        loading.value = true
         const dataForBackend = {
           conf_id: id,
           updated_data: [
@@ -272,7 +292,7 @@ const OfficerConfer = async () => {
             },
           ],
           form_status: formData.radioAuthOffic === "approve" ? formData.oldData?.past_return : formData.radioAuthOffic,
-          returnto: null,
+          return_to: null,
           return_note: formData.commentReason || null,
           past_return: null,
         };
@@ -284,6 +304,8 @@ const OfficerConfer = async () => {
       } catch (error) {
         console.log("Error saving code : ", error);
         alert("ไม่สามารถส่งข้อมูล โปรดลองอีกครั้งในภายหลัง");
+      } finally {
+        loading.value = false;
       }
     }
   } else {

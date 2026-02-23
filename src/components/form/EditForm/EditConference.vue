@@ -638,9 +638,22 @@
       </div>
 
       <div class="flex flex-1 justify-end">
-        <button @click="handleSubmit" class="btn btn-success text-white">
-          บันทึกข้อมูลที่แก้ไข
+        <button 
+          @click="handleSubmit"
+          :disabled="loading" 
+          class="btn btn-success text-white rounded">
+          {{ loading ? "กำลังบันทึก..." : "บันทึกข้อมูลที่แก้ไข" }}
         </button>
+      </div>
+    </div>
+    <!-- Popup Loading -->
+    <div
+      v-if="loading"
+      class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center"
+    >
+      <div class="bg-white rounded-xl p-6 flex flex-col items-center gap-4 shadow-lg">
+        <div class="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+        <p class="text-gray-700 font-medium">กำลังบันทึกข้อมูล...</p>
       </div>
     </div>
     
@@ -660,6 +673,8 @@ import RadioInput from "@/components/Input/RadioInput.vue";
 
 const userStore = useUserStore();
 const user = computed(() => userStore.user);
+
+const loading = ref(false);
 
 const data = reactive({
   conference: {},
@@ -807,6 +822,8 @@ const getChangedFieldsScore = () => {
 };
 
 const handleSubmit = async() => {
+  if (loading.value) return;
+
   const changed = getChangedFields();
   const changedScore = getChangedFieldsScore();
   console.log("changed confer", changed)
@@ -830,6 +847,7 @@ const handleSubmit = async() => {
   });
 
   try{
+    loading.value = true
     const dataForBackend = {
       conf_id: id,
       edit_data: changed,
@@ -848,7 +866,9 @@ const handleSubmit = async() => {
   }catch (error) {
       console.log("Error saving code : ", error);
       alert("ไม่สามารถส่งข้อมูล โปรดลองอีกครั้งในภายหลัง");
-    }
+  } finally {
+      loading.value = false;
+  }
 };
 
 onMounted(async () => {

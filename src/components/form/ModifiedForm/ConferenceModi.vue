@@ -660,10 +660,13 @@ const handleSubmit = async () => {
 
   const formData = new FormData();
   formData.append("conf_id", id);
-  formData.append("edit_data", JSON.stringify(changed));
-  formData.append("score", JSON.stringify(changedScore));
+  formData.append("edit_data", JSON.stringify({
+  edit_data: changed,
+  score: changedScore
+  }));
   formData.append("editor", userStore.user.user_nameth);
   formData.append("professor_reedit", true);
+  formData.append("form_status", "hr")
 
   // แนบไฟล์จริง
   changedFile.forEach((item) => {

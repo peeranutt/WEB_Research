@@ -133,15 +133,28 @@
     </Mainbox>
 
     <div class="flex justify-end">
-      <button @click="OfficerPC" class="btn btn-success text-white">
-        บันทึกข้อมูล
+      <button 
+        @click="OfficerPC"
+        :disabled="loading" 
+        class="btn btn-success text-white rounded">
+        {{ loading ? "กำลังบันทึก..." : "บันทึก" }}
       </button>
+    </div>
+    <!-- Popup Loading -->
+    <div
+      v-if="loading"
+      class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center"
+    >
+      <div class="bg-white rounded-xl p-6 flex flex-col items-center gap-4 shadow-lg">
+        <div class="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+        <p class="text-gray-700 font-medium">กำลังบันทึกข้อมูล...</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, onMounted, computed } from "vue";
+import { reactive, onMounted, computed, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers, requiredIf } from "@vuelidate/validators";
@@ -152,9 +165,10 @@ import api from "@/setting/api";
 
 import Mainbox from "@/components/form/Mainbox.vue";
 import SectionWrapper from "@/components/form/SectionWrapper.vue";
-import TextInputLabelLeft from "@/components/Input/TextInputLabelLeft.vue";
 import RadioInput from "@/components/Input/RadioInput.vue";
 import PageChageData from "@/components/form/DataforOffice/PageChage.vue";
+
+const loading = ref(false);
 
 const formData = reactive({
   file: "",
@@ -179,15 +193,15 @@ const handleInput = (key, value) => {
   formData[key] = value;
 };
 
-const today = DateTime.now().toISODate();
+// const today = DateTime.now().toISODate();
 
-const maxDateToday = (condition) =>
-  helpers.withMessage("* วันที่ต้องไม่เกินวันนี้ *", (value) => {
-    if (!condition()) return true;
-    if (!value) return true;
+// const maxDateToday = (condition) =>
+//   helpers.withMessage("* วันที่ต้องไม่เกินวันนี้ *", (value) => {
+//     if (!condition()) return true;
+//     if (!value) return true;
 
-    return DateTime.fromISO(value) <= DateTime.fromISO(today);
-  });
+//     return DateTime.fromISO(value) <= DateTime.fromISO(today);
+//   });
 
 const rules = computed(() => ({
   radioAuthOffic: {
@@ -241,6 +255,7 @@ const statusMap = {
 };
 
 const OfficerPC = async () => {
+  if (loading.value) return;
   const result = await v$.value.$validate();
 
   if (result) {
@@ -251,6 +266,7 @@ const OfficerPC = async () => {
     if (formData.oldData.form_status != "return" && (!formData.oldData.editor)) {
       console.log("case 1 : ", formData.oldData.form_status, formData.oldData.editor);
       try {
+        loading.value = true
         const dataForBackend = {
           research_id: user.value?.user_id,
           pageC_id: id,
@@ -259,7 +275,7 @@ const OfficerPC = async () => {
           research_doc_submit_date: formData.docSubmitDate,
 
           form_status: statusMap[formData.radioAuthOffic] || formData.radioAuthOffic,
-          returnto: formData.radioAuthOffic === "return_professor" ? "professor" : null,
+          return_to: formData.radioAuthOffic === "return_professor" ? "professor" : null,
           return_note: formData.commentReason || null,
           past_return: formData.radioAuthOffic === "return_professor" ? "research" : null,
         };
@@ -271,10 +287,13 @@ const OfficerPC = async () => {
       } catch (error) {
         console.log("Error saving code : ", error);
         alert("ไม่สามารถส่งข้อมูล โปรดลองอีกครั้งในภายหลัง");
+      } finally {
+        loading.value = false;
       }
     } else if (formData.oldData.form_status == "return") {
       console.log("case 2 : ", formData.oldData.form_status, formData.oldData.editor);
       try {
+        loading.value = true
         const dataForBackend = {
           pageC_id: id,
           updated_data: [
@@ -295,10 +314,13 @@ const OfficerPC = async () => {
       } catch (error) {
         console.log("Error saving code : ", error);
         alert("ไม่สามารถส่งข้อมูล โปรดลองอีกครั้งในภายหลัง");
+      } finally {
+        loading.value = false;
       }
     } else if (formData.oldData.form_status !== "return" && formData.oldData.editor) {
       console.log("case 3 : ", formData.oldData.form_status, formData.oldData.editor);
       try {
+        loading.value = true
         const dataForBackend = {
           pageC_id: id,
           updated_data: [
@@ -321,6 +343,8 @@ const OfficerPC = async () => {
       } catch (error) {
         console.log("Error saving code : ", error);
         alert("ไม่สามารถส่งข้อมูล โปรดลองอีกครั้งในภายหลัง");
+      } finally {
+        loading.value = false;
       }
     }
   } else {
