@@ -1,11 +1,11 @@
 <template>
   <div class="container my-10 mx-auto h-screen">
     <!-- name of each tab group should be unique -->
-    <div class="tabs tabs-box">
+    <div class="tabs tabs-box w-full">
       <input
         type="radio"
         name="my_tabs"
-        class="tab"
+        class="tab w-fit"
         aria-label="เอกสารต้องตรวจสอบ"
         value="doc"
         v-model="activeTab"
@@ -39,7 +39,7 @@
       <input
         type="radio"
         name="my_tabs"
-        class="tab"
+        class="tab w-fit"
         aria-label="เอกสารที่ถูกตีกลับ"
         value="return"
         v-model="activeTab"
