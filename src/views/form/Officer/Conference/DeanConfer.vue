@@ -35,15 +35,28 @@
     </Mainbox>
 
     <div class="flex justify-end">
-      <button @click="OfficerConfer" class="btn btn-success text-white">
-        บันทึกข้อมูล
+      <button 
+        @click="OfficerConfer"
+        :disabled="loading" 
+        class="btn btn-success text-white rounded">
+        {{ loading ? "กำลังบันทึก..." : "บันทึก" }}
       </button>
+    </div>
+    <!-- Popup Loading -->
+    <div
+      v-if="loading"
+      class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center"
+    >
+      <div class="bg-white rounded-xl p-6 flex flex-col items-center gap-4 shadow-lg">
+        <div class="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+        <p class="text-gray-700 font-medium">กำลังบันทึกข้อมูล...</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, computed } from "vue";
+import { reactive, computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers, requiredIf } from "@vuelidate/validators";
@@ -61,11 +74,13 @@ import Research from "@/components/form/DataforOffice/Research.vue";
 import FinanceAll from "@/components/form/DataforOffice/FinanceAll.vue";
 import Assosiate from "@/components/form/DataforOffice/Assosiate.vue";
 
+const loading = ref(false);
+
 const formData = reactive({
   docSubmitDate: DateTime.now().toISODate(),
   acknowledge: "",
   commentReason: "",
-  returnto: ""
+  return_to: ""
 });
 
 const handleInput = (key, value) => {
@@ -125,6 +140,7 @@ const resultMap = {
 }
 
 const OfficerConfer = async () => {
+  if (loading.value) return;
   const result = await v$.value.$validate();
 
   if (result) {
@@ -133,6 +149,7 @@ const OfficerConfer = async () => {
     }
 
     try {
+      loading.value = true
       const dataForBackend = {
         conf_id: id,
         updated_data: [
@@ -142,7 +159,7 @@ const OfficerConfer = async () => {
           { field: 'dean_doc_submit_date', value: formData.docSubmitDate },
         ],
         form_status: statusMap[formData.acknowledge],
-        returnto: returnMap[formData.acknowledge],
+        return_to: returnMap[formData.acknowledge],
         return_note: formData.commentReason || null,
         past_return: statusMap[formData.acknowledge] == 'return' ? user.value?.user_role : null
       };
@@ -154,6 +171,8 @@ const OfficerConfer = async () => {
     } catch (error) {
       console.log("Error saving code : ", error);
       alert("ไม่สามารถส่งข้อมูล โปรดลองอีกครั้งในภายหลัง");
+    } finally {
+      loading.value = false;
     }
   } else {
     alert("โปรดกรอกข้อมูลให้ครบถ้วน และถูกต้อง");

@@ -243,9 +243,22 @@
       </SectionWrapper>
     </Mainbox>
     <div class="flex justify-end mb-70">
-      <button @click="submitWithdrawMoney" class="btn btn-success text-white">
-        บันทึกข้อมูล
+      <button 
+        @click="submitWithdrawMoney"
+        :disabled="loading" 
+        class="btn btn-success text-white rounded">
+        {{ loading ? "กำลังบันทึก..." : "บันทึก" }}
       </button>
+    </div>
+    <!-- Popup Loading -->
+    <div
+      v-if="loading"
+      class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center"
+    >
+      <div class="bg-white rounded-xl p-6 flex flex-col items-center gap-4 shadow-lg">
+        <div class="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+        <p class="text-gray-700 font-medium">กำลังบันทึกข้อมูล...</p>
+      </div>
     </div>
   </div>
 </template>
@@ -258,8 +271,9 @@ import api from "@/setting/api";
 import Mainbox from "@/components/form/Mainbox.vue";
 import SectionWrapper from "@/components/form/SectionWrapper.vue";
 import TextInputLabelLeft from "@/components/Input/TextInputLabelLeft.vue";
-import RadioInput from "@/components/Input/RadioInput.vue";
 import CheckInput from "@/components/Input/CheckInput.vue";
+
+const loading = ref(false);
 
 // จัดการข้อมูลหลัก
 const formData = reactive({
@@ -326,7 +340,9 @@ const loopdata = async () => {
 };
 
 const submitWithdrawMoney = async () => {
+  if (loading.value) return;
   try {
+    loading.value = true
     const dataForBackend = {
       withdraw: formData.withdraw,
     };
@@ -337,6 +353,8 @@ const submitWithdrawMoney = async () => {
   } catch (error) {
     console.log("Error saving code : ", error);
     alert("ไม่สามารถส่งข้อมูล โปรดลองอีกครั้งในภายหลัง");
+  } finally {
+      loading.value = false;
   }
 };
 

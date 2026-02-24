@@ -386,9 +386,22 @@
       </div>
 
       <div class="flex flex-1 justify-end">
-        <button @click="handleSubmit" class="btn btn-success text-white">
-          บันทึกข้อมูลที่แก้ไข
+        <button 
+          @click="handleSubmit"
+          :disabled="loading" 
+          class="btn btn-success text-white rounded">
+          {{ loading ? "กำลังบันทึก..." : "บันทึกข้อมูลที่แก้ไข" }}
         </button>
+      </div>
+    </div>
+    <!-- Popup Loading -->
+    <div
+      v-if="loading"
+      class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center"
+    >
+      <div class="bg-white rounded-xl p-6 flex flex-col items-center gap-4 shadow-lg">
+        <div class="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+        <p class="text-gray-700 font-medium">กำลังบันทึกข้อมูล...</p>
       </div>
     </div>
 
@@ -406,6 +419,8 @@ import SectionWrapper from "@/components/form/SectionWrapper.vue";
 import TextInputLabelLeft from "@/components/Input/TextInputLabelLeft.vue";
 import RadioInput from "@/components/Input/RadioInput.vue";
 import CheckInput from "@/components/Input/CheckInput.vue";
+
+const loading = ref(false);
 
 // จัดการข้อมูลหลัก
 const formData = reactive({
@@ -495,6 +510,7 @@ const getChangedFields = () => {
 };
 
 const handleSubmit = async() => {
+  if (loading.value) return;
   const changed = getChangedFields();
 
   if (changed.length === 0) {
@@ -510,6 +526,7 @@ const handleSubmit = async() => {
   });
 
   try{
+    loading.value = true
     const dataForBackend = {
       pageC_id: id,
       edit_data: changed,
@@ -527,7 +544,9 @@ const handleSubmit = async() => {
   }catch (error) {
       console.log("Error saving code : ", error);
       alert("ไม่สามารถส่งข้อมูล โปรดลองอีกครั้งในภายหลัง");
-    }
+  } finally {
+      loading.value = false;
+  }
 };
 
 const fetchOfficerData = async () => {

@@ -29,15 +29,28 @@
     </Mainbox>
 
     <div class="flex justify-end">
-      <button @click="OfficerPC" class="btn btn-success text-white">
-        บันทึกข้อมูล
+      <button 
+        @click="OfficerPC"
+        :disabled="loading" 
+        class="btn btn-success text-white rounded">
+        {{ loading ? "กำลังบันทึก..." : "บันทึก" }}
       </button>
+    </div>
+    <!-- Popup Loading -->
+    <div
+      v-if="loading"
+      class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center"
+    >
+      <div class="bg-white rounded-xl p-6 flex flex-col items-center gap-4 shadow-lg">
+        <div class="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+        <p class="text-gray-700 font-medium">กำลังบันทึกข้อมูล...</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, computed, onMounted } from "vue";
+import { reactive, computed, onMounted, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers, requiredIf } from "@vuelidate/validators";
@@ -53,11 +66,13 @@ import PageChageData from "@/components/form/DataforOffice/PageChage.vue";
 import Research from "@/components/form/DataforOffice/Research.vue";
 import FinanceAll from "@/components/form/DataforOffice/FinanceAll.vue";
 
+const loading = ref(false);
+
 const formData = reactive({
   docSubmitDate: DateTime.now().toISODate(),
   agree: "",
   commentReason: "",
-  returnto: "",
+  return_to: "",
 
   olddata: {}
 });
@@ -124,6 +139,7 @@ const getDataPc = async () => {
 };
 
 const OfficerPC = async () => {
+  if (loading.value) return;
   const result = await v$.value.$validate();
 
   if (result) {
@@ -133,6 +149,7 @@ const OfficerPC = async () => {
 
     if (formData.olddata.form_status != "return") {
       try {
+        loading.value = true
         const dataForBackend = {
           pageC_id: id,
           updated_data: [
@@ -153,9 +170,12 @@ const OfficerPC = async () => {
       } catch (error) {
         console.log("Error saving code : ", error);
         alert("ไม่สามารถส่งข้อมูล โปรดลองอีกครั้งในภายหลัง");
+      } finally {
+        loading.value = false;
       }
     } else if (formData.olddata.form_status === "return") {
       try {
+        loading.value = true
         const dataForBackend = {
           pageC_id: id,
           updated_data: [
@@ -176,11 +196,12 @@ const OfficerPC = async () => {
       } catch (error) {
         console.log("Error saving code : ", error);
         alert("ไม่สามารถส่งข้อมูล โปรดลองอีกครั้งในภายหลัง");
+      } finally {
+        loading.value = false;
       }
     }
   } else {
     alert("โปรดกรอกข้อมูลให้ครบถ้วน และถูกต้อง");
-
     console.log("Validation failed:", v$.value.$errors);
   }
 };
