@@ -5,7 +5,7 @@
     >
       <h2 class="text-lg font-bold">{{ getTitle(form) }}</h2>
       <div class="flex flex-row w-full justify-between pt-2 items-center">
-        <div class="w-5/6 lg:w-5/6">
+        <div class="w-6/6 lg:w-6/6">
           <div class="flex flex-row gap-1">
             <h4 class="font-bold inline-block">ชื่อผู้ขออนุมัติ :</h4>
             <h4>{{ form.user_nameth }}</h4>
@@ -19,7 +19,7 @@
               }}
               :
             </h4>
-            <h4 class="line-clamp-2">{{ form.article_name }}</h4>
+            <h4 class="line-clamp-1">{{ form.article_name }}</h4>
           </div>
 
           <div
@@ -27,12 +27,12 @@
             v-if="form.article_title && form.form_type !== 'Research_KRIS'"
           >
             <h4 class="font-bold inline-block shrink-0">ชื่อบทความ :</h4>
-            <h4 class="line-clamp-2">{{ form.article_title }}</h4>
+            <h4 class="line-clamp-1">{{ form.article_title }}</h4>
           </div>
 
           <div class="flex flex-row gap-1" v-if="form.form_type === 'Research_KRIS'">
             <h4 class="font-bold inline-block shrink-0">ชื่อโครงงานวิจัย :</h4>
-            <h4 class="line-clamp-2">{{ form.article_title }}</h4>
+            <h4 class="line-clamp-1">{{ form.article_title }}</h4>
           </div>
 
           <div class="flex flex-row gap-1">
@@ -58,7 +58,7 @@
             <h4 class="font-bold inline-block shrink-0">
               เหตุผลที่ถูกตีกลับ :
             </h4>
-            <h4 class="line-clamp-2">
+            <h4 class="line-clamp-1">
               {{ comment }}
               {{ roleinThai(who) ? `( โดย ${roleinThai(who)} )` : "" }}
             </h4>
