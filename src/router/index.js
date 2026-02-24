@@ -331,11 +331,12 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (!userStore.userRole) {
-      return next("/testlogin");
+      return next("/testlogin"); //TODO:if in production redirect to "/login"
     }
   }
 
-  if (to.meta.requiresSignature && !userStore.user.user_signature) {
+  // add optional chaining to prevent errors if user is null for some reason
+  if (to.meta.requiresSignature && !userStore.user?.user_signature) {
     return next("/profile");
   }
 
