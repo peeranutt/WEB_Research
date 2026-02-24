@@ -5,44 +5,46 @@
     >
       <h2 class="text-lg font-bold">{{ getTitle(form) }}</h2>
       <div class="flex flex-row w-full justify-between pt-2 items-center">
-        <div>
-          <div class="flex">
-            <h4 class="mr-5">ชื่อผู้ขออนุมัติ : {{ form.user_nameth }}</h4>
+        <div class="w-5/6 lg:w-5/6">
+          <div class="flex flex-row gap-1">
+            <h4 class="font-bold inline-block">ชื่อผู้ขออนุมัติ :</h4>
+            <h4>{{ form.user_nameth }}</h4>
           </div>
 
-          <div class="flex" v-if="form.article_name">
-            <h4 class="mr-5 truncate">
+          <div class="flex flex-row gap-1" v-if="form.article_name">
+            <h4 class="font-bold inline-block shrink-0">
               {{
                 form.form_type === "Page_Charge"
-                  ? "ชื่อวารสาร"
-                  : "ชื่องานประชุม"
+                  ? "ชื่อวารสาร" : "ชื่องานประชุม"
               }}
-              : {{ form.article_name }}
+              :
             </h4>
+            <h4 class="line-clamp-2">{{ form.article_name }}</h4>
           </div>
 
           <div
-            class="flex"
+            class="flex flex-row gap-1"
             v-if="form.article_title && form.form_type !== 'Research_KRIS'"
           >
-            <h4 class="mr-5 truncate">ชื่อบทความ : {{ form.article_title }}</h4>
+            <h4 class="font-bold inline-block shrink-0">ชื่อบทความ :</h4>
+            <h4 class="line-clamp-2">{{ form.article_title }}</h4>
           </div>
 
-          <div class="flex" v-if="form.form_type === 'Research_KRIS'">
-            <h4 class="mr-5 truncate">
-              ชื่อโครงงานวิจัย : {{ form.article_title }}
-            </h4>
+          <div class="flex flex-row gap-1" v-if="form.form_type === 'Research_KRIS'">
+            <h4 class="font-bold inline-block shrink-0">ชื่อโครงงานวิจัย :</h4>
+            <h4 class="line-clamp-2">{{ form.article_title }}</h4>
           </div>
 
-          <div class="flex">
-            <h4 class="mr-5">
-              วันที่ส่งเอกสาร : {{ formatThaiDate(form.doc_submit_date) }}
-            </h4>
+          <div class="flex flex-row gap-1">
+            <h4 class="font-bold inline-block shrink-0">วันที่ส่งเอกสาร :</h4>
+            <h4>{{ formatThaiDate(form.doc_submit_date) }}</h4>
           </div>
 
-          <div class="flex" v-if="showAmount">
-            <h4 class="mr-5">
+          <div class="flex flex-row gap-1" v-if="showAmount">
+            <h4 class="font-bold inline-block shrink-0">
               วงเงินที่เบิกได้ :
+            </h4>
+            <h4>
               {{
                 form.form_type === "Research_KRIS"
                   ? form.Research_kris_amount
@@ -52,16 +54,19 @@
             </h4>
           </div>
 
-          <div class="flex" v-if="comment">
-            <h4 class="mr-5">
-              เหตุผลที่ถูกตีกลับ : {{ comment }}
+          <div class="flex flex-row gap-1" v-if="comment">
+            <h4 class="font-bold inline-block shrink-0">
+              เหตุผลที่ถูกตีกลับ :
+            </h4>
+            <h4 class="line-clamp-2">
+              {{ comment }}
               {{ roleinThai(who) ? `( โดย ${roleinThai(who)} )` : "" }}
             </h4>
           </div>
         </div>
 
         <!-- Status -->
-        <div v-if="showStatus" class="flex justify-end items-center">
+        <div v-if="showStatus" class="flex justify-end items-center w-2/6 lg:w-1/6">
           <div
             v-if="form.form_status == 'notApproved'"
             class="text-red-500 flex flex-col gap-2"

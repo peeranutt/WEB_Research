@@ -5,7 +5,7 @@
       <input
         type="radio"
         name="my_tabs"
-        class="tab w-fit"
+        class="tab w-fit whitespace-nowrap"
         aria-label="เอกสารต้องตรวจสอบ"
         value="doc"
         v-model="activeTab"
@@ -39,7 +39,7 @@
       <input
         type="radio"
         name="my_tabs"
-        class="tab w-fit"
+        class="tab w-fit whitespace-nowrap"
         aria-label="เอกสารที่ถูกตีกลับ"
         value="return"
         v-model="activeTab"
