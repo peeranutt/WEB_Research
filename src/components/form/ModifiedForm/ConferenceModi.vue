@@ -377,14 +377,14 @@
             </div>
             <div class="">
               <button @click="getFile(formData.file.file_published_journals)" class="btn bg-[#E85F19] text-white mr-5"
-                disabled="!isValidFile(formData.file.file_published_journals)">
+                :disabled="!isValidFile(formData.file.file_published_journals)">
                 ดูเอกสาร
               </button>
 
               <input type="file" @change="onFileChange($event, 'published_journals')" class="hidden"
                 ref="published_journals" />
               <button @click="$refs.published_journals.click()" class="btn bg-blue-500 text-white"
-                disabled="!isValidFile(formData.file.file_published_journals)">
+                :disabled="!isValidFile(formData.file.file_published_journals)">
                 แก้ไขไฟล์
               </button>
             </div>
@@ -401,13 +401,13 @@
             </div>
             <div class="">
               <button @click="getFile(formData.file.file_q_proof)" class="btn bg-[#E85F19] text-white mr-5"
-                disabled="!isValidFile(formData.file.file_q_proof)">
+                :disabled="!isValidFile(formData.file.file_q_proof)">
                 ดูเอกสาร
               </button>
 
               <input type="file" @change="onFileChange($event, 'q_proof')" class="hidden" ref="q_proof" />
               <button @click="$refs.q_proof.click()" class="btn bg-blue-500 text-white"
-                disabled="!isValidFile(formData.file.file_q_proof)">
+                :disabled="!isValidFile(formData.file.file_q_proof)">
                 แก้ไขไฟล์
               </button>
             </div>
@@ -688,9 +688,12 @@ const handleSubmit = async () => {
   }
 };
 
-const getFile = async (fileUrl) => {
-  formData.file = fileUrl;
-  window.open(formData.file, "_blank");
+const isValidFile = (fileUrl) => {
+  return fileUrl && !fileUrl.endsWith('/undefined') && !fileUrl.endsWith('/null');
+};
+
+const getFile = (fileUrl) => {
+  window.open(fileUrl, "_blank");
 };
 
 const fetchOfficerData = async () => {

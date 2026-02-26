@@ -23,11 +23,11 @@
         </p>
       </SectionWrapper>
     </Mainbox>
-    <!-- 1.  รายละเอียดวารสารที่ส่งเสนอพิจารณา / การตอบรับให้ลงตีพิมพ์  -->
+    <!-- 1.  รายละเอียดวารสารที่ส่งเสนอพิจารณา / การตอบรับให้ลงตีพิมพ์  -->
     <Mainbox class="collapse collapse-arrow collapse-open">
       <input type="checkbox" />
       <p class="collapse-title leading-9 text-lg font-bold">
-        1.  รายละเอียดวารสารที่ส่งเสนอพิจารณา / การตอบรับให้ลงตีพิมพ์
+        1.  รายละเอียดวารสารที่ส่งเสนอพิจารณา / การตอบรับให้ลงตีพิมพ์
       </p>
       <SectionWrapper class="collapse-content">
         <TextInputLabelLeft label="ชื่อวารสาร" name="Input" customLabel="w-24"
@@ -158,7 +158,7 @@
               <RadioInput label="วิจัยอื่น ๆ " value="วิจัยother" name="type"
                 customDiv="max-w-fit mr-2 flex items-center" v-model="formData.pageChange.research_type"
                 :class="isFieldEdited('research_type') ? 'text-red-500' : ''" />
-              <TextInputLabelLeft v-if="formData.pageChange.research_type == 'วิจัยother '" label="(ระบุ)" name="type"
+              <TextInputLabelLeft v-if="formData.pageChange.research_type == 'วิจัยother'" label="(ระบุ)" name="type"
                 customDiv="max-w-fit flex items-center" v-model="formData.pageChange.research_type2"
                 :class="isFieldEdited('research_type2') ? 'text-red-500' : ''" />
             </div>
@@ -184,7 +184,7 @@
       <SectionWrapper class="collapse-content">
         <RadioInput label="ผู้ประพันธ์อันดับแรก First Author" value="First Author" name="Author"
           v-model="formData.pageChange.presenter_type" :class="isFieldEdited('presenter_type') ? 'text-red-500' : ''" />
-        <RadioInput label="ผู้ประพันธ์บรรณกิจ Corresponding Author" value="Corresponding Author"
+        <RadioInput label="ผู้ประพันธ์บรรณกิจ Corresponding Author" value="Corresponding Author" name="Author"
           v-model="formData.pageChange.presenter_type" :class="isFieldEdited('presenter_type') ? 'text-red-500' : ''" />
       </SectionWrapper>
     </Mainbox>
@@ -342,7 +342,6 @@ import SectionWrapper from "@/components/form/SectionWrapper.vue";
 import TextInputLabelLeft from "@/components/Input/TextInputLabelLeft.vue";
 import RadioInput from "@/components/Input/RadioInput.vue";
 import CheckInput from "@/components/Input/CheckInput.vue";
-import FileInput from "@/components/Input/FileInput.vue";
 
 // จัดการข้อมูลหลัก
 const formData = reactive({
@@ -378,9 +377,7 @@ const formData = reactive({
 const userStore = useUserStore();
 const user = computed(() => userStore.user);
 
-//isLoading เพื่อแสดงสถานะว่ากำลังโหลดข้อมูล
 const isLoading = ref(true);
-// Access route parameters
 const router = useRouter();
 const route = useRoute();
 const id = route.params.id;
@@ -391,20 +388,17 @@ const onFileChange = (event, field) => {
   if (file) {
     formData.file[field] = file;
   }
-  console.log("edit formData[field]", field)
-  console.log("edit file", file)
-  console.log(formData)
-}
+  console.log("edit formData[field]", field);
+  console.log("edit file", file);
+  console.log(formData);
+};
 
 const getChangedFields = () => {
   const current = toRaw(formData.pageChange);
   const originalPageChange = formData.originPc;
   const changedFields = [];
-  console.log("changedFields", changedFields);
-  console.log("current", current);
-  console.log("originalPageChange", originalPageChange);
   for (const key in current) {
-    if (current[key] !== originalPageChange[key]) {
+    if (JSON.stringify(current[key]) !== JSON.stringify(originalPageChange[key])) {
       changedFields.push({
         field: key,
         oldValue: originalPageChange[key],
@@ -419,8 +413,6 @@ const getChangedFieldsFile = () => {
   const current = toRaw(formData.file);
   const originalFile = formData.originFile;
   const changedFields = [];
-  console.log("current file", current);
-  console.log("ori file", originalFile);
   for (const key in current) {
     if (JSON.stringify(current[key]) !== JSON.stringify(originalFile[key])) {
       changedFields.push({
@@ -441,25 +433,33 @@ const handleSubmit = async () => {
     alert("ไม่มีการเปลี่ยนแปลงข้อมูล");
     return;
   }
-  console.log("ฟิลด์ที่ถูกแก้ไข:", changed);
-  console.log("ฟิลด์ที่ถูกแก้ไข changedFile:", changedFile);
 
-  const formData = new FormData();
-  formData.append("pageC_id", id);
-  formData.append("edit_data", JSON.stringify(changed));
-  formData.append("editor", userStore.user.user_nameth);
-  formData.append("professor_reedit", true);
+  // FIX: ใช้ชื่อตัวแปรต่างออกไปเพื่อไม่ให้ทับ reactive formData
+  const submitForm = new FormData();
+  submitForm.append("pageC_id", id);
+  submitForm.append("edit_data", JSON.stringify(changed));
+  submitForm.append("editor", userStore.user.user_nameth);
+  submitForm.append("professor_reedit", true);
 
-  // แนบไฟล์จริง
   changedFile.forEach((item) => {
     if (item.newValue instanceof File) {
-      formData.append(item.field, item.newValue);
+      submitForm.append(item.field, item.newValue);
     }
   });
 
+  // แสดงข้อมูลในrm FormData อย่างชัดเจน
+  console.log("submitForm contents:");
+  for (let [key, value] of submitForm.entries()) {
+    if (value instanceof File) {
+      console.log(`${key}:`, `File(${value.name}, ${value.size} bytes)`);
+    } else {
+      console.log(`${key}:`, value);
+    }
+  }
   try {
-    console.log("dataForBackend: ", formData);
-    await api.put(`/editedFormPageChage/${id}`, formData);
+    await api.put(`/editedFormPageChage/${id}`, submitForm, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     alert("บันทึกข้อมูลเรียบร้อยแล้ว");
     router.push("/myHistory");
   } catch (error) {
@@ -468,12 +468,10 @@ const handleSubmit = async () => {
   }
 };
 
-const getFile = async (fileUrl) => {
-  formData.file = fileUrl;
-  window.open(formData.file, "_blank");
+const getFile = (fileUrl) => {
+  window.open(fileUrl, "_blank");
 };
 
-// ตัวแปรสำหรับเก็บข้อมูลจาก backend
 const fetchProfessorData = async () => {
   try {
     const responsePC = await api.get(`/page_charge/${id}`);
@@ -483,23 +481,22 @@ const fetchProfessorData = async () => {
 
     formData.pageChange = responsePC.data;
     formData.originPc = JSON.parse(JSON.stringify(responsePC.data));
-    console.log("pageChange", formData.pageChange);
-    formData.check = formData.pageChange.quality_journal;
+    formData.check = formData.pageChange.quality_journal || [];
+
     const resEdit = await api.get(`/form/${userID}`);
-    console.log("data", resEdit.data);
     for (let i = 0; i < resEdit.data.length; i++) {
-      console.log("have edit ja", i);
       if (
         resEdit.data[i].form_type == "Page_Charge" &&
         resEdit.data[i].pageC_id == id
       ) {
-        console.log("have edit ja", resEdit.data[i]);
         formData.status = resEdit.data[i].form_status;
-        formData.editForm.push(resEdit.data[i].edit_data);
+        // FIX: edit_data มาจาก DB เป็น JSON string ต้อง parse ก่อน
+        const parsed = resEdit.data[i].edit_data;
+        formData.editForm.push(typeof parsed === "string" ? JSON.parse(parsed) : parsed);
       }
     }
+
     const responsefile = await api.get(`/getFilepage_c?pageC_id=${id}`);
-    console.log("responsefile", responsefile.data)
     formData.file = responsefile.data;
     formData.originFile = JSON.parse(JSON.stringify(responsefile.data));
 
@@ -509,55 +506,45 @@ const fetchProfessorData = async () => {
     formData.f_accepted = responsefile.data.file_accepted;
     formData.f_copy_article = responsefile.data.file_copy_article;
     formData.f_upload_article = responsefile.data.file_upload_article;
-    console.log("wow za", formData.editForm);
   } catch (error) {
     console.log("Error fetching professor data:", error);
   } finally {
     isLoading.value = false;
   }
-  console.log("Fetching professor data...");
 };
 
-const loopdata = async () => {
-  console.log("in loop");
+// FIX: loopdata เรียกหลัง fetchProfessorData เสร็จแล้วเท่านั้น (await)
+const loopdata = () => {
+  const checkList = formData.check || [];
+  formData.nature = "";
+  formData.checkISI = "";
+  formData.checkSJR = "";
+  formData.checkScopus = "";
 
-  fetchProfessorData();
-
-  console.log("formdata, ", formData.check);
-  for (let i = 0; i < formData.check.length; i++) {
-    console.log("checking journal", formData.check[i]);
-    if (formData.check[i] == "nature") {
-      formData.nature = "nature";
-      console.log("Journal have 'nature'");
-    }
-    if (formData.check[i] == "ISI") {
-      formData.checkISI = "ISI";
-      console.log("Journal have 'ISI'");
-    }
-    if (formData.check[i] == "SJR") {
-      formData.checkSJR = "SJR";
-      console.log("Journal have 'SJR'");
-    }
-    if (formData.check[i] == "Scopus") {
-      formData.checkScopus = "Scopus";
-      console.log("Journal have 'Scopus'");
-    }
+  for (let i = 0; i < checkList.length; i++) {
+    if (checkList[i] == "nature") formData.nature = "nature";
+    if (checkList[i] == "ISI") formData.checkISI = "ISI";
+    if (checkList[i] == "SJR") formData.checkSJR = "SJR";
+    if (checkList[i] == "Scopus") formData.checkScopus = "Scopus";
   }
 };
 
 const isFieldEdited = (field) => {
-  const editDataArray = toRaw(formData.editForm[0] || []);
-  return editDataArray.some((item) => item.field === field);
+  let raw = toRaw(formData.editForm[0]);
+  if (!raw) return false;
+  // ถ้ายังเป็น JSON string ให้ parse ก่อน
+  if (typeof raw === "string") {
+    try { raw = JSON.parse(raw); } catch { return false; }
+  }
+  // รองรับทั้ง array โดยตรง หรือ object ที่มี edit_data
+  const arr = Array.isArray(raw) ? raw : (raw?.edit_data || []);
+  if (!Array.isArray(arr)) return false;
+  return arr.some((item) => item.field === field);
 };
-// ดึงข้อมูลเมื่อ component ถูกโหลด
+
 onMounted(async () => {
+  await userStore.fetchUser();
   await fetchProfessorData();
   loopdata();
-  if (!userStore.user) {
-    await userStore.fetchUser();
-  }
-  await userStore.fetchUser();
-  data.id = user.value?.user_id;
-  await getData();
 });
 </script>
