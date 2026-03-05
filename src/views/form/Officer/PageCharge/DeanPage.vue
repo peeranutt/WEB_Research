@@ -60,7 +60,6 @@
         {{ loading ? "กำลังบันทึก..." : "บันทึก" }}
       </button>
     </div>
-    !-- Popup Loading -->
     <div
       v-if="loading"
       class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center"
@@ -142,16 +141,13 @@ const fetchProfessorData = async () => {
 };
 
 const rules = computed(() => ({
-  // acknowledge: {
-  //   required: helpers.withMessage("* กรุณาเลือกข้อมูล *", required),
-  // },
   radioAuthOffic: {
     required: helpers.withMessage("* กรุณาเลือกข้อมูล *", required),
   },
   reason: {
     required: helpers.withMessage(
       "* กรุณากรอกข้อมูล *",
-      requiredIf(() => formData.radioAuthOffic !== "approved")
+      requiredIf(() => formData.radioAuthOffic !== "approve")
     ),
   },
 }));
