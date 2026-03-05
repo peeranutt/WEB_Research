@@ -209,11 +209,11 @@ const roleinThai = (who) => {
 };
 const showTHstatus = (status) => {
   switch (status) {
-    case "approved":
+    case "approve":
       return "อนุมัติ";
-    case "rejected":
+    case "notApproved":
       return "ไม่อนุมัติ";
-    case "returned":
+    case "return":
       return "ถูกตีกลับ";
     default:
       return "รออนุมัติ";
