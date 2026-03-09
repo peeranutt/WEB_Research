@@ -57,9 +57,8 @@
           :class="{
             'text-green-500': form.form_status === 'approve',
             'text-red-500': form.form_status === 'notApproved',
-            'text-yellow-500':
-              form.form_status !== 'approve' &&
-              form.form_status !== 'notApproved',
+            'text-blue-700': form.form_status === 'return',
+            'text-yellow-500': form.form_status !== 'approve' && form.form_status !== 'notApproved',
           }"
         >
           <p class="text-base">สถานะ{{ showTHstatus(form.form_status) }}</p>
