@@ -261,7 +261,7 @@ const OfficerConfer = async () => {
         await api.put(`/opinionConf/${id}`, dataForBackend);
 
         alert("บันทึกข้อมูลเรียบร้อยแล้ว");
-        router.push("/officer");
+        router.push("/HomePage/officer");
       } catch (error) {
         console.log("Error saving code : ", error);
         alert("ไม่สามารถส่งข้อมูล โปรดลองอีกครั้งในภายหลัง");
@@ -300,7 +300,7 @@ const OfficerConfer = async () => {
         await api.put(`/opinionConf/${id}`, dataForBackend);
 
         alert("บันทึกข้อมูลเรียบร้อยแล้ว");
-        router.push("/officer");
+        router.push("/HomePage/officer");
       } catch (error) {
         console.log("Error saving code : ", error);
         alert("ไม่สามารถส่งข้อมูล โปรดลองอีกครั้งในภายหลัง");

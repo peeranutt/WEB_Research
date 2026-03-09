@@ -128,7 +128,7 @@ const OfficerKris = async () => {
 
       const response = await api.post(`/opinionKris`, dataForBackend);
       alert("บันทึกข้อมูลเรียบร้อย");
-      router.push("/officer");
+      router.push("/HomePage/officer");
     } catch (error) {
       console.log("Error saving code : ", error);
       alert("ไม่สามารถส่งข้อมูล โปรดลองอีกครั้งในภายหลัง");

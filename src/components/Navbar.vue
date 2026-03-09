@@ -26,7 +26,7 @@
           <li
             v-if="hasRole(['hr', 'research', 'finance', 'associate', 'dean'])"
           >
-            <router-link to="/Officer">ตรวจสอบเอกสาร</router-link>
+            <router-link to="/HomePage/officer">ตรวจสอบเอกสาร</router-link>
           </li>
           <li
             v-if="
@@ -43,7 +43,7 @@
             <details>
               <summary>ยื่นการขอรับการสนับสนุน</summary>
               <ul class="p-2 bg-base-100 w-fit z-1">
-                <li><router-link to="/homePage">ยื่นเอกสาร</router-link></li>
+                <li><router-link to="/HomePage/professor">ยื่นเอกสาร</router-link></li>
                 <li>
                   <router-link to="/myHistory"
                     >สถานะ และประวัติการยื่นเอกสาร</router-link
@@ -87,7 +87,7 @@
           <li
             v-if="hasRole(['hr', 'research', 'finance', 'associate', 'dean'])"
           >
-            <router-link to="/Officer">ตรวจสอบเอกสาร</router-link>
+            <router-link to="/HomePage/officer">ตรวจสอบเอกสาร</router-link>
           </li>
           <li
             v-if="
@@ -104,7 +104,7 @@
             <details>
               <summary>ยื่นการขอรับการสนับสนุน</summary>
               <ul class="p-2 bg-base-100 w-fit z-1">
-                <li><router-link to="/homePage">ยื่นเอกสาร</router-link></li>
+                <li><router-link to="/HomePage/professor">ยื่นเอกสาร</router-link></li>
                 <li>
                   <router-link to="/myHistory"
                     >สถานะ และประวัติการยื่นเอกสาร</router-link
@@ -180,10 +180,10 @@ const user = computed(() => userStore.user);
 const logoRoute = computed(() => {
   if (!user.value) return "/";
   const role = user.value.user_role;
-  if (role === "professor") return "/homePage";
+  if (role === "professor") return "/HomePage/professor";
   if (["hr", "research", "finance", "associate", "dean"].includes(role))
-    return "/Officer";
-  if (role === "admin") return "/admin";
+    return "/HomePage/officer";
+  if (role === "admin") return "/HomePage/admin";
   return "/";
 });
 

@@ -55,11 +55,11 @@ const login = async () => {
 
             const currentUser = userStore.user;
             if (currentUser?.user_role === "professor") {
-              router.push("/homePage");
+              router.push("/HomePage/professor");
             } else if (currentUser?.user_role === "admin") {
-              router.push("/admin");
+              router.push("/HomePage/admin");
             } else {
-              router.push("/Officer");
+              router.push("/HomePage/officer");
             }
           } catch (error) {
             alert(error.response.data.message);

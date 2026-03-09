@@ -283,7 +283,7 @@ const OfficerPC = async () => {
         await api.post(`/opinionPC`, dataForBackend);
 
         alert("บันทึกข้อมูลเรียบร้อยแล้ว");
-        router.push("/officer");
+        router.push("/HomePage/officer");
       } catch (error) {
         console.log("Error saving code : ", error);
         alert("ไม่สามารถส่งข้อมูล โปรดลองอีกครั้งในภายหลัง");
@@ -310,7 +310,7 @@ const OfficerPC = async () => {
 
         await api.put(`/opinionPC/${id}`, dataForBackend);
         alert("บันทึกข้อมูลเรียบร้อยแล้ว");
-        router.push("/officer");
+        router.push("/HomePage/officer");
       } catch (error) {
         console.log("Error saving code : ", error);
         alert("ไม่สามารถส่งข้อมูล โปรดลองอีกครั้งในภายหลัง");
@@ -339,7 +339,7 @@ const OfficerPC = async () => {
 
         await api.put(`/opinionPC/${id}`, dataForBackend);
         alert("บันทึกข้อมูลเรียบร้อยแล้ว");
-        router.push("/officer");
+        router.push("/HomePage/officer");
       } catch (error) {
         console.log("Error saving code : ", error);
         alert("ไม่สามารถส่งข้อมูล โปรดลองอีกครั้งในภายหลัง");

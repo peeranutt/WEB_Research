@@ -74,13 +74,13 @@ const router = createRouter({
       meta: { requiresAuth: false, requiresSignature: false },
     },
     {
-      path: "/homePage",
+      path: "/HomePage/professor",
       name: "HomePageProfes",
       component: HomePage_Profes,
       meta: { requiresAuth: true, requiresSignature: true },
-    },
+    }, 
     {
-      path: "/officer",
+      path: "/HomePage/officer",
       name: "HomePageOfficer",
       component: HomePage_Offi,
       meta: {
@@ -90,7 +90,7 @@ const router = createRouter({
       },
     },
     {
-      path: "/admin",
+      path: "/HomePage/admin",
       name: "HomepageAdmin",
       component: Homepage_Admin,
       meta: { requiresAuth: true, requiresSignature: true, role: ["admin"] },

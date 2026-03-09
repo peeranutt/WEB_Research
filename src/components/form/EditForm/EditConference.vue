@@ -862,7 +862,7 @@ const handleSubmit = async() => {
     const draftKey = `draft-form-CF-${id}`;
     localStorage.removeItem(draftKey);
 
-    router.push("/officer");
+    router.push("/HomePage/officer");
   }catch (error) {
       console.log("Error saving code : ", error);
       alert("ไม่สามารถส่งข้อมูล โปรดลองอีกครั้งในภายหลัง");
