@@ -114,9 +114,9 @@ const pulldata = async () => {
             minimumFractionDigits: 2,
           }
         ),
+        myHistory: true
       };
     });
-    console.log("data.allForm",data.allForm)
   } catch (error) {
     console.error(error);
     data.allForm = [];

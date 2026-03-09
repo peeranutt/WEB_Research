@@ -6,7 +6,7 @@
       <h2 class="text-lg font-bold">{{ getTitle(form) }}</h2>
       <div class="flex flex-row w-full justify-between pt-2 items-center">
         <div class="w-6/6 lg:w-6/6">
-          <div class="flex flex-row gap-1">
+          <div class="flex flex-row gap-1" v-if="!MyHistory">
             <h4 class="font-bold inline-block">ชื่อผู้ขออนุมัติ :</h4>
             <h4>{{ form.user_nameth }}</h4>
           </div>
@@ -95,6 +95,7 @@
 
 <script setup>
 import { useUserStore } from "@/store/userStore";
+import MyHistory from "@/views/HistoryView/MyHistory.vue";
 
 const props = defineProps({
   form: { type: Object, required: true },
@@ -106,6 +107,7 @@ const props = defineProps({
   showStatus: { type: Boolean, default: true },
   comment: { type: String, default: "" },
   who: { type: String, default: "" },
+  MyHistory: false
 });
 
 const formatThaiDate = (dateString) => {
