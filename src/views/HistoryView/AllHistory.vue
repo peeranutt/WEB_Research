@@ -2,58 +2,36 @@
   <div class="container my-10 mx-auto">
     <h1 class="text-xl font-bold mb-5">ประวัติเอกสารทั้งหมด</h1>
 
-    <!-- Filters -->
-    <div class="flex flex-row mb-4 w-full">
-      <span class="flex mr-2 items-center">ปีงบประมาณ</span>
-      <select
-        class="select select-bordered w-1/6"
-        v-model="data.findFiscalYear"
-      >
-        <option v-for="n in 5" :key="n" :value="fiscalYear - (n - 1)">
-          {{ fiscalYear - (n - 1) }}
-        </option>
-      </select>
+    <FormFilter
+      v-model:fiscalYear="data.findFiscalYear"
+      v-model:typeOfDoc="data.typeOfDoc"
+      v-model:typeStatus="data.typeStatus"
+      :baseFiscalYear="fiscalYear"
+    />
 
-      <span class="flex ml-4 mr-2 items-center">ประเภทเอกสาร</span>
-      <select
-        class="select select-bordered w-1/6"
-        v-model="data.typeOfDoc"
-      >
-        <option value="all">ทั้งหมด</option>
-        <option value="Conference">ประชุมวิชาการ</option>
-        <option value="Page_Charge">ตีพิมพ์วารสาร</option>
-        <option value="Research_KRIS">ทุนวิจัย</option>
-      </select>
-
-      <span class="flex ml-4 mr-2 items-center">สถานะเอกสาร</span>
-      <select
-        class="select select-bordered w-1/6"
-        v-model="data.typeStatus"
-      >
-        <option value="all">ทั้งหมด</option>
-        <option value="waitingApproval">รออนุมัติ</option>
-        <option value="approve">อนุมัติ</option>
-        <option value="notApproved">ไม่อนุมัติ</option>
-        <option value="return">ตีกลับ</option>
-      </select>
+    <!-- Loading -->
+    <div v-if="data.loading" class="flex justify-center py-20">
+      <span class="loading loading-spinner loading-lg text-primary"></span>
     </div>
 
     <!-- List -->
-     <div v-if="data.allForm && data.allForm.length > 0">
+    <template v-else-if="data.allForm.length > 0">
       <FormCard
         v-for="form in data.allForm"
         :key="form.form_id"
         :form="form"
         :page="'history'"
+        type-history="all""
         :roleConferenceMap="roleConferenceMap"
         :rolePageChargeMap="rolePageChargeMap"
         :roleResearchKRISMap="roleResearchKRISMap"
         :showAmount="true"
         :showStatus="true"
       />
-    </div>
+    </template>
 
-    <div v-else class="text-center text-gray-400 text-3xl">
+    <!-- Empty -->
+     <div v-else class="text-center text-gray-400 text-3xl py-20">
       <p>ไม่มีเอกสาร</p>
     </div>
   </div>
@@ -61,43 +39,31 @@
 
 <script setup>
 import { onMounted, reactive, watch } from "vue";
-import { DateTime } from "luxon";
 import api from "@/setting/api";
 import FormCard from "@/components/form/FormCard.vue";
+import FormFilter from "@/components/form/FormFilter.vue";
+import { getThaiFiscalYear, formatForm } from "@/utils/formHelpers";
+
+/* -------------------- constants -------------------- */
+const fiscalYear = getThaiFiscalYear();
+
+const roleConferenceMap = { conference: "/history/conference/" };
+const rolePageChargeMap = { pageCharge: "/history/pageCharge/" };
+const roleResearchKRISMap = { kris: "/history/kris/" };
 
 /* -------------------- state -------------------- */
 const data = reactive({
   allForm: [],
-  findFiscalYear: "",
+  findFiscalYear: fiscalYear,
   typeOfDoc: "all",
   typeStatus: "all",
-  isEmpty: false,
+  loading: false,
 });
 
-/* -------------------- role map -------------------- */
-const roleConferenceMap = {
-  conference: "/history/conference/",
-};
-
-const rolePageChargeMap = {
-  pageCharge: "/history/pageCharge/",
-};
-
-const roleResearchKRISMap = {
-  kris: "/history/kris/",
-};
-
-/* -------------------- utils -------------------- */
-const getThaiFiscalYear = () => {
-  const now = DateTime.now();
-  const year = now.year + 543;
-  return now.month >= 10 ? year + 1 : year;
-};
-
-const fiscalYear = getThaiFiscalYear();
-
 /* -------------------- api -------------------- */
-const pulldata = async () => {
+const getAllData = async () => {
+  data.loading = true;
+
   try {
     const res = await api.get("/allForms", {
       params: {
@@ -107,38 +73,21 @@ const pulldata = async () => {
       },
     });
 
-    data.allForm = res.data.map((form) => ({
-      ...form,
-      amount_approval: Number(form.amount_approval || 0).toLocaleString(
-        "en-US",
-        { minimumFractionDigits: 2 }
-      ),
-      Research_kris_amount: Number(
-        form.Research_kris_amount || 0
-      ).toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-      }),
-    }));
-
-    data.isEmpty = data.allForm.length === 0;
+    data.allForm = res.data.map((form) => formatForm(form));
   } catch (error) {
     console.error("โหลดข้อมูลไม่สำเร็จ:", error);
     data.allForm = [];
-    data.isEmpty = true;
+  } finally {
+    data.loading = false;
   }
 };
 
 /* -------------------- lifecycle -------------------- */
-onMounted(() => {
-  data.findFiscalYear = fiscalYear;
-  pulldata();
-});
+onMounted(() => getAllData());
 
-/* -------------------- watch filters -------------------- */
+/* -------------------- watch -------------------- */
 watch(
   () => [data.findFiscalYear, data.typeOfDoc, data.typeStatus],
-  () => {
-    pulldata();
-  }
+  () => getAllData()
 );
 </script>

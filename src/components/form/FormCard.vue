@@ -1,92 +1,71 @@
 <template>
-  <router-link v-if="getLink(form) || true" :to="getLink(form) || '#'">
+  <router-link :to="getLink(form) || '#'">
     <div
-      class="my-2 p-4 border border-[#D9D9D9] rounded-md text-black hover:cursor-pointer"
+      class="my-2 p-4 border border-[#D9D9D9] rounded-md text-black hover:cursor-pointer hover:border-gray-400 hover:shadow-sm transition-all duration-150"
     >
       <h2 class="text-lg font-bold">{{ getTitle(form) }}</h2>
-      <div class="flex flex-row w-full justify-between pt-2 items-center">
-        <div class="w-6/6 lg:w-6/6">
-          <div class="flex flex-row gap-1" v-if="!MyHistory">
-            <h4 class="font-bold inline-block">ชื่อผู้ขออนุมัติ :</h4>
-            <h4>{{ form.user_nameth }}</h4>
-          </div>
 
-          <div class="flex flex-row gap-1" v-if="form.article_name">
-            <h4 class="font-bold inline-block shrink-0">
-              {{
-                form.form_type === "Page_Charge"
-                  ? "ชื่อวารสาร" : "ชื่องานประชุม"
-              }}
-              :
-            </h4>
-            <h4 class="line-clamp-1">{{ form.article_name }}</h4>
-          </div>
-
-          <div
-            class="flex flex-row gap-1"
-            v-if="form.article_title && form.form_type !== 'Research_KRIS'"
-          >
-            <h4 class="font-bold inline-block shrink-0">ชื่อบทความ :</h4>
-            <h4 class="line-clamp-1">{{ form.article_title }}</h4>
-          </div>
-
-          <div class="flex flex-row gap-1" v-if="form.form_type === 'Research_KRIS'">
-            <h4 class="font-bold inline-block shrink-0">ชื่อโครงงานวิจัย :</h4>
-            <h4 class="line-clamp-1">{{ form.article_title }}</h4>
-          </div>
-
-          <div class="flex flex-row gap-1">
-            <h4 class="font-bold inline-block shrink-0">วันที่ส่งเอกสาร :</h4>
-            <h4>{{ formatThaiDate(form.doc_submit_date) }}</h4>
-          </div>
-
-          <div class="flex flex-row gap-1" v-if="showAmount">
-            <h4 class="font-bold inline-block shrink-0">
-              วงเงินที่เบิกได้ :
-            </h4>
-            <h4>
-              {{
-                form.form_type === "Research_KRIS"
-                  ? form.Research_kris_amount
-                  : form.amount_approval
-              }}
-              บาท
-            </h4>
-          </div>
-
-          <div class="flex flex-row gap-1" v-if="comment">
-            <h4 class="font-bold inline-block shrink-0">
-              เหตุผลที่ถูกตีกลับ :
-            </h4>
-            <h4 class="line-clamp-1">
-              {{ comment }}
-              {{ roleinThai(who) ? `( โดย ${roleinThai(who)} )` : "" }}
-            </h4>
-          </div>
+      <div class="flex flex-row w-full justify-between pt-2 items-center gap-4">
+        <!-- Info -->
+        <div class="flex flex-col gap-1.5 flex-1 min-w-0">
+          <InfoRow
+            v-if="typeHistory === 'all'"
+            label="ชื่อผู้ขออนุมัติ"
+            :value="form.user_nameth"
+          />
+          <InfoRow
+            v-if="form.article_name"
+            :label="
+              form.form_type === 'Page_Charge' ? 'ชื่อวารสาร' : 'ชื่องานประชุม'
+            "
+            :value="form.article_name"
+            truncate
+          />
+          <InfoRow
+            v-if="form.article_title"
+            :label="
+              form.form_type === 'Research_KRIS'
+                ? 'ชื่อโครงงานวิจัย'
+                : 'ชื่อบทความ'
+            "
+            :value="form.article_title"
+            truncate
+          />
+          <InfoRow
+            label="วันที่ส่งเอกสาร"
+            :value="formatThaiDate(form.doc_submit_date)"
+          />
+          <InfoRow
+            v-if="showAmount"
+            label="วงเงินที่เบิกได้"
+            :value="`${form.form_type === 'Research_KRIS' ? form.Research_kris_amount : form.amount_approval} บาท`"
+          />
+          <InfoRow
+            v-if="comment"
+            label="เหตุผลที่ถูกตีกลับ"
+            :value="
+              comment + (roleinThai(who) ? ` ( โดย ${roleinThai(who)} )` : '')
+            "
+            truncate
+          />
         </div>
 
         <!-- Status -->
-        <div v-if="showStatus" class="flex justify-end items-center w-2/6 lg:w-1/6">
-          <div
-            v-if="form.form_status == 'notApproved'"
-            class="text-red-500 flex flex-col gap-2"
-          >
-            <p>สถานะ{{ showTHstatus(form.form_status) }}</p>
-            <p>อัปเดตเมื่อ {{ formatThaiDate(form.date_form_edit) }}</p>
-          </div>
-
-          <div
-            v-else-if="form.form_status == 'approve'"
-            class="text-green-500 flex flex-col gap-2"
-          >
-            <p>สถานะ{{ showTHstatus(form.form_status) }}</p>
-            <p>อัปเดตเมื่อ {{ formatThaiDate(form.date_form_edit) }}</p>
-          </div>
-
-          <div v-else class="text-yellow-500 flex flex-col gap-2">
-            <p>สถานะ{{ showTHstatus(form.form_status) }}</p>
-            <p>อัปเดตเมื่อ {{ formatThaiDate(form.date_form_edit) }}</p>
-          </div>
+        <div
+          v-if="showStatus"
+          class="flex-shrink-0 text-right flex flex-col gap-1"
+          :class="{
+            'text-green-500': form.form_status === 'approve',
+            'text-red-500': form.form_status === 'notApproved',
+            'text-yellow-500':
+              form.form_status !== 'approve' &&
+              form.form_status !== 'notApproved',
+          }"
+        >
+          <p class="text-base">สถานะ{{ showTHstatus(form.form_status) }}</p>
+          <p class="text-base text-gray-400">
+            อัปเดตเมื่อ {{ formatThaiDate(form.date_form_edit) }}
+          </p>
         </div>
       </div>
     </div>
@@ -95,131 +74,100 @@
 
 <script setup>
 import { useUserStore } from "@/store/userStore";
-import MyHistory from "@/views/HistoryView/MyHistory.vue";
+import InfoRow from "@/components/form/InfoRow.vue";
 
+/* -------------------- props -------------------- */
 const props = defineProps({
   form: { type: Object, required: true },
   page: { type: String, default: "history" },
-  roleConferenceMap: { type: Object, required: false, default: () => ({}) },
-  rolePageChargeMap: { type: Object, required: false, default: () => ({}) },
-  roleResearchKRISMap: { type: Object, required: false, default: () => ({}) },
+  roleConferenceMap: { type: Object, default: () => ({}) },
+  rolePageChargeMap: { type: Object, default: () => ({}) },
+  roleResearchKRISMap: { type: Object, default: () => ({}) },
   showAmount: { type: Boolean, default: true },
   showStatus: { type: Boolean, default: true },
   comment: { type: String, default: "" },
   who: { type: String, default: "" },
-  MyHistory: false
+  typeHistory: { type: String, default: "" },
 });
 
-const formatThaiDate = (dateString) => {
-  if (!dateString) return "ไม่พบวันที่";
-
-  const date = new Date(dateString);
-  const months = [
-    "ม.ค.",
-    "ก.พ.",
-    "มี.ค.",
-    "เม.ย.",
-    "พ.ค.",
-    "มิ.ย.",
-    "ก.ค.",
-    "ส.ค.",
-    "ก.ย.",
-    "ต.ค.",
-    "พ.ย.",
-    "ธ.ค.",
-  ];
-
-  const day = date.getUTCDate();
-  const month = months[date.getUTCMonth()];
-  const year = date.getUTCFullYear() + 543;
-  return `${day} ${month} ${year}`;
-};
-
+/* -------------------- store -------------------- */
 const userStore = useUserStore();
 
-const getLink = (form) => {
-  const role = userStore.user.user_role;
+/* -------------------- constants -------------------- */
+const ID_FIELD = {
+  Conference: "conf_id",
+  Page_Charge: "pageC_id",
+  Research_KRIS: "kris_id",
+};
 
-  /// เลือก map ตามหน้า
-  let roleMapByType;
+const HISTORY_PATH = {
+  Conference: "/history/conference/",
+  Page_Charge: "/history/pageCharge/",
+  Research_KRIS: "/history/kris/",
+};
+
+const TITLES = {
+  Conference: "ขออนุมัติเดินทางไปเผยแพร่ผลงานในการประชุมทางวิชาการ",
+  Page_Charge: "ขออนุมัติค่า Page Charge",
+  Research_KRIS: "แบบเสนอโครงการวิจัย",
+};
+
+const STATUS_TH = {
+  approve: "อนุมัติ",
+  notApproved: "ไม่อนุมัติ",
+  return: "ถูกตีกลับ",
+};
+
+const ROLE_TH = {
+  hr: "ฝ่ายบริหารทรัพยากรบุคคล",
+  research: "ฝ่ายบริหารงานวิจัย",
+  finance: "ฝ่ายบริหารการเงิน",
+  associate: "รองคณบดี",
+  dean: "คณบดี",
+  professor: "อาจารย์ผู้เสนอขออนุมัติ",
+  officer: "เจ้าหน้าที่",
+};
+
+const MONTHS_TH = [
+  "ม.ค.",
+  "ก.พ.",
+  "มี.ค.",
+  "เม.ย.",
+  "พ.ค.",
+  "มิ.ย.",
+  "ก.ค.",
+  "ส.ค.",
+  "ก.ย.",
+  "ต.ค.",
+  "พ.ย.",
+  "ธ.ค.",
+];
+
+/* -------------------- methods -------------------- */
+const getLink = (form) => {
+  const { form_type } = form;
+  const idField = ID_FIELD[form_type];
+  if (!idField) return "#";
+
   if (props.page === "officer") {
-    roleMapByType = {
+    const roleMap = {
       Conference: props.roleConferenceMap,
       Page_Charge: props.rolePageChargeMap,
       Research_KRIS: props.roleResearchKRISMap,
-    };
-  } else {
-    roleMapByType = {
-      Conference: { default: "/history/conference/" },
-      Page_Charge: { default: "/history/pageCharge/" },
-      Research_KRIS: { default: "/history/kris/" },
-    };
+    }[form_type];
+    const role = userStore.user?.user_role;
+    return roleMap?.[role] ? roleMap[role] + form[idField] : "#";
   }
 
-  const idFieldByType = {
-    Conference: "conf_id",
-    Page_Charge: "pageC_id",
-    Research_KRIS: "kris_id",
-  };
-
-  const roleMap = roleMapByType[form.form_type];
-  const idField = idFieldByType[form.form_type];
-
-  console.log("roleMap:", roleMap);
-  console.log("idField:", idField);
-
-  if (!roleMap || !idField) return "#";
-
-  // officer → ใช้ role ของ user
-  // history → fallback default
-  if (props.page === "officer") {
-    return roleMap[role] ? roleMap[role] + form[idField] : "#";
-  } else {
-    return roleMap.default + form[idField];
-  }
+  return (HISTORY_PATH[form_type] ?? "#") + form[idField];
 };
 
-const getTitle = (form) => {
-  switch (form.form_type) {
-    case "Conference":
-      return "ขออนุมัติเดินทางไปเผยแพร่ผลงานในการประชุมทางวิชาการ";
-    case "Page_Charge":
-      return "ขออนุมัติค่า Page Charge";
-    case "Research_KRIS":
-      return "แบบเสนอโครงการวิจัย";
-    default:
-      return "";
-  }
+const getTitle = (form) => TITLES[form.form_type] ?? "";
+const showTHstatus = (status) => STATUS_TH[status] ?? "รออนุมัติ";
+const roleinThai = (who) => ROLE_TH[who] ?? "";
+const formatThaiDate = (dateString) => {
+  if (!dateString) return "ไม่พบวันที่";
+  const d = new Date(dateString);
+  return `${d.getUTCDate()} ${MONTHS_TH[d.getUTCMonth()]} ${d.getUTCFullYear() + 543}`;
 };
-
-const roleinThai = (who) => {
-  if (who == "hr") {
-    return "ฝ่ายบริหารทรัพยากรบุคคล";
-  } else if (who == "research") {
-    return "ฝ่ายบริหารงานวิจัย";
-  } else if (who == "finance") {
-    return "ฝ่ายบริหารการเงิน";
-  } else if (who == "associate") {
-    return "รองคณบดี";
-  } else if (who == "dean") {
-    return "คณบดี";
-  } else if (who == "professor") {
-    return "อาจารย์ผู้เสนอขออนุมัติ";
-  } else if (who == "officer") {
-    return "เจ้าหน้าที่";
-  }
-};
-const showTHstatus = (status) => {
-  switch (status) {
-    case "approve":
-      return "อนุมัติ";
-    case "notApproved":
-      return "ไม่อนุมัติ";
-    case "return":
-      return "ถูกตีกลับ";
-    default:
-      return "รออนุมัติ";
-  }
-};
-
 </script>
