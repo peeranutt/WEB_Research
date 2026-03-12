@@ -13,7 +13,7 @@
     <Dean :id="id" :type="'Conference'" />
     <WithdrawMoney :id="id" :type="'Conference'" />
 
-    <div class="container my-10 mx-auto" v-if="formData.status.form_status === 'waitingApproval'">
+    <div class="container my-10 mx-auto" v-if="role == 'hr' && formData.status.form_status === 'waitingApproval'">
       <Mainbox>
         <p class="text-m font-bold">ตรวจสอบเอกสาร และข้อมูลการอนุมัติ</p>
         <div class="px-2 py-2">
@@ -99,6 +99,7 @@ import Dean from "@/components/form/DataforOffice/Dean.vue";
 import WithdrawMoney from "@/components/form/DataforOffice/WithdrawMoney.vue";
 import Mainbox from "@/components/form/Mainbox.vue";
 import RadioInput from "@/components/Input/RadioInput.vue";
+import { useUserStore } from "@/store/userStore";
 
 const route = useRoute();
 const id = route.params.id;
@@ -142,6 +143,9 @@ const rules = computed(() => ({
 }));
 
 const v$ = useVuelidate(rules, formData);
+
+const userStore = useUserStore();
+const role = userStore.user.user_role;
 
 const getDataCf = async () => {
   const response = await api.get(`/form/confer/${id}`);
