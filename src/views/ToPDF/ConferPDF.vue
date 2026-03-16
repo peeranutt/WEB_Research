@@ -657,7 +657,7 @@ const fetchProfessorData = async () => {
       remaining_credit_limit: formatNumber(
         formData.budget.remaining_credit_limit
       ),
-      amount_approval: formatNumber(formData.budget.amount_appr),
+      amount_approval: formatNumber(formData.budget.amount_approval),
       total_remaining_credit_limit: formatNumber(
         formData.budget.total_remaining_credit_limit
       ),
