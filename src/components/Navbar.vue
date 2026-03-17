@@ -168,14 +168,39 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
-import { useRouter } from "vue-router";
-
+import { computed, watch, onMounted, onUnmounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import { useUserStore } from "@/store/userStore";
 
 const router = useRouter();
+const route = useRoute();
 const userStore = useUserStore();
 const user = computed(() => userStore.user);
+
+// ปิด details ทั้งหมด
+const closeAllDetails = () => {
+  document.querySelectorAll("details[open]").forEach((el) => {
+    el.removeAttribute("open");
+  });
+};
+
+// ปิดเมื่อเปลี่ยนหน้า
+watch(() => route.path, closeAllDetails);
+
+// ปิดเมื่อคลิกข้างนอก
+const handleClickOutside = (e) => {
+  if (!e.target.closest("details")) {
+    closeAllDetails();
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
 
 const logoRoute = computed(() => {
   if (!user.value) return "/";
@@ -188,7 +213,6 @@ const logoRoute = computed(() => {
 });
 
 const role = computed(() => user.value?.user_role);
-
 const hasRole = (roles) => {
   if (!role.value) return false;
   return roles.includes(role.value);
