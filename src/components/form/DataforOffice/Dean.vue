@@ -23,7 +23,7 @@
     </div>
 
     <div v-if="props.type == 'Page_Charge'">
-      <div v-if="formData.offic.p_dean_acknowledge">
+      <div v-if="formData.offic.p_dean_result">
         <Mainbox class="collapse collapse-arrow collapse-open">
           <input type="checkbox" />
           <p class="collapse-title text-lg font-bold">คณบดี</p>
@@ -50,11 +50,6 @@
             <p class="text-lg font-bold">
               เรียน คณบดีคณะเทคโนโลยีสารสนเทศ (ครั้งที่ 2)
             </p>
-            <!-- <p class="text-base mt-1">
-              ขณะนี้บทความได้รับการตอบรับแล้ว (Letter of acceptance) เมื่อวันที่
-              <b>{{ formatThaiDate(formData.offic.p_date_accepted_approve) }} </b>
-              ตามหลักฐานที่แนบจึงเรียนมาเพื่อโปรดพิจารณา
-            </p> -->
             <div class="px-2">
               <RadioInput
                 label="อนุมัติ"
@@ -106,32 +101,8 @@ const formData = reactive({
   offic: [],
 });
 
-const formatThaiDate = (dateString) => {
-  const date = new Date(dateString);
-  const months = [
-    "ม.ค.",
-    "ก.พ.",
-    "มี.ค.",
-    "เม.ย.",
-    "พ.ค.",
-    "มิ.ย.",
-    "ก.ค.",
-    "ส.ค.",
-    "ก.ย.",
-    "ต.ค.",
-    "พ.ย.",
-    "ธ.ค.",
-  ];
-  const day = date.getUTCDate();
-  const month = months[date.getUTCMonth()];
-  const year = date.getUTCFullYear() + 543;
-  return `${day} ${month} ${year}`;
-};
-
 const props = defineProps(["id", "type"]);
 const isLoading = ref(true);
-console.log("params.id", props.id);
-console.log("params.type", props.type);
 
 const fetchOfficerData = async () => {
   try {

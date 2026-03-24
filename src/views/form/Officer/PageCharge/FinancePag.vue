@@ -16,8 +16,8 @@
             <TextInputLabelLeft
               label="วงเงินที่คณะจัดสรรไว้ จำนวนเงินทั้งสิ้น"
               customInput="max-w-max text-center"
-              v-model="formData.totalAll"
-              @input="handleInput('totalAll', $event.target.value)"
+              :modelValue="formatWithCommas(formData.totalAll)"
+              @input="handleTotalAllInput($event)"
             />
             <p class="flex items-center w-12">บาท</p>
           </div>
@@ -49,8 +49,7 @@
             <TextInputLabelLeft
               label="วงเงินที่คณะจัดสรรไว้ คงเหลือ"
               customInput="max-w-max text-center"
-              :placeholder="caltotalFaculty"
-              v-model="formData.caltotalFaculty"
+              :modelValue="caltotalFaculty"
             />
             <p class="flex items-center w-12">บาท</p>
           </div>
@@ -60,8 +59,8 @@
             <TextInputLabelLeft
               label="จำนวนเงินที่ขออนุมัติค่า Page Charge ในครั้งนี้ เป็นจำนวนเงิน"
               customInput="max-w-max text-center"
-              :placeholder="parseFloat(formData.canWithdrawn).toLocaleString('en-US', {minimumFractionDigits: 0})"
-              v-model="formData.canWithdrawn"
+              :modelValue="parseFloat(formData.canWithdrawn || 0).toLocaleString('en-US', {minimumFractionDigits: 2})"
+              readonly
             />
             <p class="flex items-center w-12">บาท</p>
           </div>
@@ -71,8 +70,7 @@
             <TextInputLabelLeft
               label="วงเงินที่คณะจัดสรรไว้ คงเหลือทั้งสิ้น"
               customInput="max-w-max text-center"
-              :placeholder="caltotalFacultyNow"
-              v-model="formData.totalcreditLimit"
+              :modelValue="caltotalFacultyNow"
             />
             <p class="flex items-center w-12">บาท</p>
           </div>
@@ -202,9 +200,22 @@ const handleInput = (key, value) => {
   formData[key] = value;
 };
 
+const formatWithCommas = (value) => {
+  if (!value && value !== 0) return '';
+  const raw = String(value).replace(/,/g, '');
+  if (isNaN(raw)) return value;
+  return parseFloat(raw).toLocaleString('en-US');
+};
+
+const handleTotalAllInput = (e) => {
+  const raw = e.target.value.replace(/,/g, '');
+  formData.totalAll = raw;
+  e.target.value = raw ? parseFloat(raw).toLocaleString('en-US') : '';
+};
+
 const caltotalFaculty = computed(() => {
   formData.creditLimit =
-    parseFloat(formData.totalAll) - parseFloat(formData.totalapproved);
+    parseFloat(formData.totalAll || 0) - parseFloat(formData.totalapproved || 0);
   return formData.creditLimit.toLocaleString("en-US", {
     minimumFractionDigits: 2,
   });
@@ -212,7 +223,9 @@ const caltotalFaculty = computed(() => {
 
 const caltotalFacultyNow = computed(() => {
   formData.totalcreditLimit =
-    parseFloat(formData.creditLimit) - parseFloat(formData.canWithdrawn);
+    (parseFloat(formData.totalAll || 0) -
+      parseFloat(formData.totalapproved || 0)) -
+    parseFloat(formData.canWithdrawn || 0);
   return formData.totalcreditLimit.toLocaleString("en-US", {
     minimumFractionDigits: 2,
   });

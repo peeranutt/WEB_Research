@@ -6,7 +6,7 @@
         <span :class="`mb-1 ${customLabel}`"> {{ label }} <span v-if="required" class="text-red-500">*</span></span>
       </div>
 
-      <input type="file" :class="`file-input file-input-bordered w-full ${customInput}`"
+      <input type="file" :class="`file-input file-input-bordered w-full ${customInput}`" accept=".pdf"
         :disabled="disabled"  @change="$emit('update:modelValue', $event.target.files[0])" />
     </label>
   </div>

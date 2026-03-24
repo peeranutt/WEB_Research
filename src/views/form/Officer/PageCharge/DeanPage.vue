@@ -199,6 +199,7 @@ const OfficerPC = async () => {
           { field: 'p_dean_acknowledge', value: formData.acknowledge || null },
           { field: 'p_dean_result', value: resultMap[formData.radioAuthOffic] },
           { field: 'p_dean_reason', value: formData.reason },
+          { field: 'dean_doc_submit_date', value: formData.docSubmitDate },
         ],
         form_status: statusMap[formData.radioAuthOffic],
         return_to: returnMap[formData.radioAuthOffic],

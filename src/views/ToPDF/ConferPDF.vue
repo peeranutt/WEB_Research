@@ -380,14 +380,14 @@
             <p>ตรวจหลักฐานคุณภาพของการจัดประชุมทางวิชาการ</p>
             <p>- คุณภาพของการประชุมฯ</p>
             <div class="flex flex-row gap-2 pl-4">
-              <input type="radio" :disabled="true" :checked="formData.confer.quality_meeting == 'standard' ? true : false
+              <input type="radio" :disabled="true" :checked="formData.offic.c_quality == 'standard' ? true : false
                 " />
               <span>ระดับมาตรฐาน</span>
-              <input type="radio" :disabled="true" :checked="formData.confer.quality_meeting == 'good' ? true : false
+              <input type="radio" :disabled="true" :checked="formData.offic.c_quality == 'good' ? true : false
                 " />
               <span>ระดับดีมาก</span>
             </div>
-            <div v-if="formData.confer.quality_meeting == 'good'">
+            <div v-if="formData.offic.c_quality == 'good'">
               <p>
                 - กรณีที่เป็นการประชุมวิชาการ
                 <b>ระดับดีมาก</b> เลือกวิธีคิดค่าคะแนนคุณภาพ และมีระดับคะแนน

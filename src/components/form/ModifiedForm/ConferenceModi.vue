@@ -357,7 +357,7 @@
                 ดูเอกสาร
               </button>
 
-              <input type="file" @change="onFileChange($event, 'full_page')" class="hidden" ref="full_page" />
+              <input type="file" accept=".pdf" @change="onFileChange($event, 'full_page')" class="hidden" ref="full_page" />
               <button @click="$refs.full_page.click()" class="btn bg-blue-500 text-white">
                 แก้ไขไฟล์
               </button>
@@ -381,7 +381,7 @@
                 ดูเอกสาร
               </button>
 
-              <input type="file" @change="onFileChange($event, 'published_journals')" class="hidden"
+              <input type="file" accept=".pdf" @change="onFileChange($event, 'published_journals')" class="hidden"
                 ref="published_journals" />
               <button @click="$refs.published_journals.click()" class="btn bg-blue-500 text-white"
                 :disabled="!isValidFile(formData.file.file_published_journals)">
@@ -405,7 +405,7 @@
                 ดูเอกสาร
               </button>
 
-              <input type="file" @change="onFileChange($event, 'q_proof')" class="hidden" ref="q_proof" />
+              <input type="file" accept=".pdf" @change="onFileChange($event, 'q_proof')" class="hidden" ref="q_proof" />
               <button @click="$refs.q_proof.click()" class="btn bg-blue-500 text-white"
                 :disabled="!isValidFile(formData.file.file_q_proof)">
                 แก้ไขไฟล์
@@ -426,7 +426,7 @@
                 ดูเอกสาร
               </button>
 
-              <input type="file" @change="onFileChange($event, 'call_for_paper')" class="hidden" ref="call_for_paper" />
+              <input type="file" accept=".pdf" @change="onFileChange($event, 'call_for_paper')" class="hidden" ref="call_for_paper" />
               <button @click="$refs.call_for_paper.click()" class="btn bg-blue-500 text-white">
                 แก้ไขไฟล์
               </button>
@@ -444,7 +444,7 @@
                 ดูเอกสาร
               </button>
 
-              <input type="file" @change="onFileChange($event, 'accepted')" class="hidden" ref="accepted" />
+              <input type="file" accept=".pdf" @change="onFileChange($event, 'accepted')" class="hidden" ref="accepted" />
               <button @click="$refs.accepted.click()" class="btn bg-blue-500 text-white">
                 แก้ไขไฟล์
               </button>
@@ -462,7 +462,7 @@
                 ดูเอกสาร
               </button>
 
-              <input type="file" @change="onFileChange($event, 'fee_receipt')" class="hidden" ref="fee_receipt" />
+              <input type="file" accept=".pdf" @change="onFileChange($event, 'fee_receipt')" class="hidden" ref="fee_receipt" />
               <button @click="$refs.fee_receipt.click()" class="btn bg-blue-500 text-white">
                 แก้ไขไฟล์
               </button>
@@ -480,7 +480,7 @@
                 ดูเอกสาร
               </button>
 
-              <input type="file" @change="onFileChange($event, 'fx_rate_document')" class="hidden"
+              <input type="file" accept=".pdf" @change="onFileChange($event, 'fx_rate_document')" class="hidden"
                 ref="fx_rate_document" />
               <button @click="$refs.fx_rate_document.click()" class="btn bg-blue-500 text-white">
                 แก้ไขไฟล์
@@ -499,7 +499,7 @@
                 ดูเอกสาร
               </button>
 
-              <input type="file" @change="onFileChange($event, 'conf_proof')" class="hidden" ref="conf_proof" />
+              <input type="file" accept=".pdf" @change="onFileChange($event, 'conf_proof')" class="hidden" ref="conf_proof" />
               <button @click="$refs.conf_proof.click()" class="btn bg-blue-500 text-white">
                 แก้ไขไฟล์
               </button>
@@ -508,10 +508,24 @@
         </div>
       </SectionWrapper>
     </Mainbox>
-    <div class="flex justify-end gap-4 mb-70">
-      <button @click="handleSubmit" class="btn btn-success text-white">
-        ยืนยัน
+
+    <div class="flex justify-end">
+      <button ผผ
+        @click="handleSubmit"
+        :disabled="isLoading" 
+        class="btn btn-success text-white rounded">
+        {{ isLoading ? "กำลังบันทึก..." : "บันทึก" }}
       </button>
+    </div>
+    <!-- Popup Loading -->
+    <div
+      v-if="isLoading"
+      class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center"
+    >
+      <div class="bg-white rounded-xl p-6 flex flex-col items-center gap-4 shadow-lg">
+        <div class="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+        <p class="text-gray-700 font-medium">กำลังบันทึกข้อมูล...</p>
+      </div>
     </div>
   </div>
 </template>
@@ -571,7 +585,6 @@ const allTotal = computed(() => {
 });
 
 const userStore = useUserStore();
-const user = computed(() => userStore.user);
 
 const isLoading = ref(true);
 // Access route parameters
@@ -645,6 +658,7 @@ const getChangedFieldsFile = () => {
 };
 
 const handleSubmit = async () => {
+  if (isLoading.value) return;
   const changed = getChangedFields();
   const changedScore = getChangedFieldsScore();
   const changedFile = getChangedFieldsFile();
@@ -676,6 +690,7 @@ const handleSubmit = async () => {
   });
 
   try {
+    isLoading.value = true;
     console.log("dataForBackend: ", formData);
     await api.put(`/editedFormConfer/${id}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },

@@ -17,8 +17,8 @@
             <TextInputLabelLeft
               label="วงเงินที่คณะจัดสรรไว้ จำนวนเงินทั้งสิ้น"
               customInput="max-w-max text-center"
-              v-model="formData.totalAll"
-              @input="handleInput('totalAll', $event.target.value)"
+              :modelValue="formatWithCommas(formData.totalAll)"
+              @input="handleTotalAllInput($event)"
             />
             <p class="flex items-center w-12">บาท</p>
           </div>
@@ -58,8 +58,8 @@
             <TextInputLabelLeft
               label="วงเงินที่คณะจัดสรรไว้ คงเหลือ"
               customInput="max-w-max text-center"
-              :placeholder="caltotalFaculty"
-              v-model="formData.caltotalFaculty"
+              :modelValue="caltotalFaculty"
+              readonly
             />
             <p class="flex items-center w-12">บาท</p>
           </div>
@@ -70,12 +70,12 @@
             <TextInputLabelLeft
               label="จำนวนเงินที่ขออนุมัติจัดสรรในครั้งนี้ เป็นจำนวนเงิน"
               customInput="max-w-max text-center"
-              :placeholder="
+              :modelValue="
                 parseFloat(moneyRequested).toLocaleString('en-US', {
                   minimumFractionDigits: 2,
                 })
               "
-              v-model="formData.newmoneyRequested"
+              readonly
             />
             <p class="flex items-center w-12">บาท</p>
           </div>
@@ -85,8 +85,8 @@
             <TextInputLabelLeft
               label="วงเงินที่คณะจัดสรรไว้ คงเหลือทั้งสิ้น"
               customInput="max-w-max text-center"
-              :placeholder="caltotalFacultyNow"
-              v-model="formData.caltotalFacultyNow"
+              :modelValue="caltotalFacultyNow"
+              readonly
             />
             <p class="flex items-center w-12">บาท</p>
           </div>
@@ -262,6 +262,19 @@ const formData = reactive({
 
 const handleInput = (key, value) => {
   formData[key] = value;
+};
+
+const formatWithCommas = (value) => {
+  if (!value && value !== 0) return '';
+  const raw = String(value).replace(/,/g, '');
+  if (isNaN(raw)) return value;
+  return parseFloat(raw).toLocaleString('en-US');
+};
+
+const handleTotalAllInput = (e) => {
+  const raw = e.target.value.replace(/,/g, '');
+  formData.totalAll = raw;
+  e.target.value = raw ? parseFloat(raw).toLocaleString('en-US') : '';
 };
 
 const caltotalFaculty = computed(() => {

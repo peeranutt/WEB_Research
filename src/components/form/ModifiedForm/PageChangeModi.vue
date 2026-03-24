@@ -218,7 +218,7 @@
                 ดูเอกสาร
               </button>
 
-              <input type="file" @change="onFileChange($event, 'pc_proof')" class="hidden" ref="pc_proof" />
+              <input type="file" accept=".pdf" @change="onFileChange($event, 'pc_proof')" class="hidden" ref="pc_proof" />
               <button @click="$refs.pc_proof.click()" class="btn bg-blue-500 text-white">
                 แก้ไขไฟล์
               </button>
@@ -239,7 +239,7 @@
                 ดูเอกสาร
               </button>
 
-              <input type="file" @change="onFileChange($event, 'q_pc_proof')" class="hidden" ref="q_pc_proof" />
+              <input type="file" accept=".pdf" @change="onFileChange($event, 'q_pc_proof')" class="hidden" ref="q_pc_proof" />
               <button @click="$refs.q_pc_proof.click()" class="btn bg-blue-500 text-white">
                 แก้ไขไฟล์
               </button>
@@ -260,7 +260,7 @@
                 ดูเอกสาร
               </button>
 
-              <input type="file" @change="onFileChange($event, 'invoice_public')" class="hidden" ref="invoice_public" />
+              <input type="file" accept=".pdf" @change="onFileChange($event, 'invoice_public')" class="hidden" ref="invoice_public" />
               <button @click="$refs.invoice_public.click()" class="btn bg-blue-500 text-white">
                 แก้ไขไฟล์
               </button>
@@ -278,7 +278,7 @@
                 ดูเอกสาร
               </button>
 
-              <input type="file" @change="onFileChange($event, 'accepted')" class="hidden" ref="accepted" />
+              <input type="file" accept=".pdf" @change="onFileChange($event, 'accepted')" class="hidden" ref="accepted" />
               <button @click="$refs.accepted.click()" class="btn bg-blue-500 text-white">
                 แก้ไขไฟล์
               </button>
@@ -296,7 +296,7 @@
                 ดูเอกสาร
               </button>
 
-              <input type="file" @change="onFileChange($event, 'copy_article')" class="hidden" ref="copy_article" />
+              <input type="file" accept=".pdf" @change="onFileChange($event, 'copy_article')" class="hidden" ref="copy_article" />
               <button @click="$refs.copy_article.click()" class="btn bg-blue-500 text-white">
                 แก้ไขไฟล์
               </button>
@@ -314,7 +314,7 @@
                 ดูเอกสาร
               </button>
 
-              <input type="file" @change="onFileChange($event, 'upload_article')" class="hidden" ref="upload_article" />
+              <input type="file" accept=".pdf" @change="onFileChange($event, 'upload_article')" class="hidden" ref="upload_article" />
               <button @click="$refs.upload_article.click()" class="btn bg-blue-500 text-white">
                 แก้ไขไฟล์
               </button>

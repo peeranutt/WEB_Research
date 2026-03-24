@@ -38,7 +38,10 @@
             </p>
 
             <div class="my-5">
-              <input type="file" class="file-input file-input-bordered w-full max-w-xs"
+              <input 
+                type="file" 
+                class="file-input file-input-bordered w-full max-w-xs"
+                accept=".png"
                 @change="handleFile($event, 'signature')" />
             </div>
 
