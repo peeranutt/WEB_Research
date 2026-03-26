@@ -62,7 +62,13 @@
         </div>
 
         <div class="flex justify-end">
-          <button @click="SummitStatus" class="btn btn-success text-white">อัปเดตสถานะเอกสาร</button>
+          <button 
+            @click="SummitStatus" 
+            :disabled="loading" 
+            class="btn btn-success text-white"
+          >
+          {{ loading ? "กำลังบันทึก..." : "อัปเดตสถานะเอกสาร" }}
+          </button>
         </div>
       </Mainbox>
     </div>
@@ -79,11 +85,21 @@
         </router-link>
       </div>
     </div>
+    <!-- Popup Loading -->
+    <div
+      v-if="loading"
+      class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center"
+    >
+      <div class="bg-white rounded-xl p-6 flex flex-col items-center gap-4 shadow-lg">
+        <div class="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+        <p class="text-gray-700 font-medium">กำลังบันทึกข้อมูล...</p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, onMounted, watch, computed } from "vue";
+import { reactive, onMounted, watch, computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import api from "@/setting/api";
 import { useVuelidate } from "@vuelidate/core";
@@ -103,6 +119,8 @@ import { useUserStore } from "@/store/userStore";
 
 const route = useRoute();
 const id = route.params.id;
+const loading = ref(false);
+
 const formData = reactive({
   form: [],
   status: [],
@@ -158,10 +176,12 @@ const getStatus = async () => {
 };
 
 const SummitStatus = async () => {
+  if (loading.value) return;
   const result = await v$.value.$validate();
 
   if (result) {
     try {
+      loading.value = true
       const dataForBackend = {
         form_status: formData.new.form_status,
         return: formData.new.return ? formData.new.return : null,
@@ -175,6 +195,8 @@ const SummitStatus = async () => {
     } catch (error) {
       console.log("Error saving code : ", error);
       alert("ไม่สามารถส่งข้อมูล โปรดลองอีกครั้งในภายหลัง");
+    } finally {
+      loading.value = false;
     }
 
   } else {

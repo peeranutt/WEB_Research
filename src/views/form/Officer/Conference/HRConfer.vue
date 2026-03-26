@@ -203,7 +203,7 @@ import { onMounted, reactive, computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers, requiredIf } from "@vuelidate/validators";
-
+import { DateTime } from "luxon";
 import { useUserStore } from "@/store/userStore";
 import api from "@/setting/api";
 
@@ -231,6 +231,7 @@ const formData = reactive({
   radioAuthOffic: "",
   commentReason: "",
   return_to: "",
+  docSubmitDate: DateTime.now().toISODate(),
 
   oldData: {},
 });

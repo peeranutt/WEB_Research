@@ -711,6 +711,32 @@ const getFile = (fileUrl) => {
   window.open(fileUrl, "_blank");
 };
 
+const normalizeEditData = (rawEditData) => {
+  if (!rawEditData) return null;
+
+  let parsed = rawEditData;
+  if (typeof parsed === "string") {
+    try {
+      parsed = JSON.parse(parsed);
+    } catch {
+      return null;
+    }
+  }
+
+  if (Array.isArray(parsed)) {
+    return { edit_data: parsed, score: [] };
+  }
+
+  if (typeof parsed === "object") {
+    return {
+      edit_data: Array.isArray(parsed.edit_data) ? parsed.edit_data : [],
+      score: Array.isArray(parsed.score) ? parsed.score : [],
+    };
+  }
+
+  return null;
+};
+
 const fetchOfficerData = async () => {
   try {
     const responseConfer = await api.get(`/conference/${id}`);
@@ -737,7 +763,10 @@ const fetchOfficerData = async () => {
         console.log("have edit ja", resEdit.data[i]);
         console.log("have edit ja", resEdit.data[i].form_status);
         formData.status = resEdit.data[i].form_status;
-        formData.editForm.push(resEdit.data[i].edit_data);
+        const parsed = normalizeEditData(resEdit.data[i].edit_data);
+        if (parsed) {
+          formData.editForm.push(parsed);
+        }
       }
     }
     console.log("wow za", formData.editForm);
@@ -762,11 +791,10 @@ const fetchOfficerData = async () => {
   }
 };
 const isFieldEdited = (field) => {
-  const editDataArray = toRaw(formData.editForm[0] || []);
-  const allEdit = [
-    ...(editDataArray.edit_data || []),
-    ...(editDataArray.score || []),
-  ];
+  const editDataArray = normalizeEditData(toRaw(formData.editForm[0]));
+  if (!editDataArray) return false;
+
+  const allEdit = [...editDataArray.edit_data, ...editDataArray.score];
   return allEdit.some((item) => item.field === field);
 };
 

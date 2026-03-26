@@ -472,6 +472,29 @@ const getFile = (fileUrl) => {
   window.open(fileUrl, "_blank");
 };
 
+const normalizeEditData = (rawEditData) => {
+  if (!rawEditData) return null;
+
+  let parsed = rawEditData;
+  if (typeof parsed === "string") {
+    try {
+      parsed = JSON.parse(parsed);
+    } catch {
+      return null;
+    }
+  }
+
+  if (Array.isArray(parsed)) {
+    return parsed;
+  }
+
+  if (typeof parsed === "object" && Array.isArray(parsed.edit_data)) {
+    return parsed.edit_data;
+  }
+
+  return null;
+};
+
 const fetchProfessorData = async () => {
   try {
     const responsePC = await api.get(`/page_charge/${id}`);
@@ -491,8 +514,10 @@ const fetchProfessorData = async () => {
       ) {
         formData.status = resEdit.data[i].form_status;
         // FIX: edit_data มาจาก DB เป็น JSON string ต้อง parse ก่อน
-        const parsed = resEdit.data[i].edit_data;
-        formData.editForm.push(typeof parsed === "string" ? JSON.parse(parsed) : parsed);
+        const parsed = normalizeEditData(resEdit.data[i].edit_data);
+        if (parsed) {
+          formData.editForm.push(parsed);
+        }
       }
     }
 
